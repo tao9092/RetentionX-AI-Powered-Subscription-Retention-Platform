@@ -1,42 +1,71 @@
-# subscription_vue
+# RetentionX
 
-This template should help get you started developing with Vue 3 in Vite.
+**AI-Powered Subscription Retention Platform**
 
-## Recommended IDE Setup
+RetentionX helps subscription businesses identify customers at risk of churn, understand the reasons behind the risk, prioritise the right intervention and estimate the subscription revenue that could be protected.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Preliminary-round objective
 
-## Recommended Browser Setup
+The prototype demonstrates one complete decision workflow:
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+1. Detect high-risk and under-utilised subscription accounts.
+2. Calculate an explainable customer health score and churn probability.
+3. Show the strongest risk signals for each account.
+4. Recommend a next-best retention action and response timeframe.
+5. Prioritise accounts using risk, revenue and recoverability.
+6. Estimate monthly revenue at risk and potential annual revenue protected.
 
-## Type Support for `.vue` Imports in TS
+## Main screens
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- **Executive Overview** — portfolio KPIs, churn distribution, revenue risk by plan and high-priority accounts.
+- **Customers** — searchable and filterable customer portfolio.
+- **Customer 360 Drawer** — health score, risk evidence and next-best action.
+- **Retention Actions** — prioritised action queue with timeframe and revenue impact.
 
-## Customize configuration
+## Prototype model
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+The preliminary demo uses a transparent rule-based scoring model based on:
 
-## Project Setup
+- 30-day usage decline
+- feature adoption
+- licensed-seat utilisation
+- unresolved support tickets
+- customer satisfaction
+- late payment behaviour
+- days until renewal
 
-```sh
+This is intentional for the preliminary round: every result is explainable and the end-to-end product workflow is usable. A validated machine-learning model can later replace the scoring layer while preserving the same interface and decision workflow.
+
+## Technology
+
+- Vue 3
+- TypeScript
+- Vite
+- CSS/SVG visualisations with no chart-library dependency
+- Simulated B2B SaaS subscription dataset
+
+## Run locally
+
+```bash
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Production build:
 
-```sh
+```bash
 npm run build
+npm run preview
 ```
+
+## Recommended demo flow
+
+1. Open **Executive Overview** and explain the revenue at risk.
+2. Select a high-risk account such as **CloudNine Commerce**.
+3. Show the churn probability and explainable risk signals.
+4. Present the recommended action, timeframe and potential revenue protected.
+5. Open **Retention Actions** to show how the system prioritises the entire portfolio.
+
+## Data disclaimer
+
+The included dataset and intervention estimates are simulated for concept validation. A production implementation should integrate CRM, product-usage, support, payment and feedback systems, then validate churn and intervention models using historical outcomes.
