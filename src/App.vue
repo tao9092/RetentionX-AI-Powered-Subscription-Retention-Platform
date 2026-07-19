@@ -1,85 +1,80 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import LeftNav from './component/leftNavigater.vue'
-// 1. 组件引入改用大驼峰命名
-import Dashboard from './component/dashboard.vue'
-import Homepage from './component/homepage.vue'
+import { computed, ref } from 'vue'
+import Sidebar from '@/components/Sidebar.vue'
+import type { ViewId } from '@/types/navigation'
+import TopBar from '@/components/TopBar.vue'
+import CustomerDetailDrawer from '@/components/CustomerDetailDrawer.vue'
+import OverviewView from '@/views/OverviewView.vue'
+import CustomersView from '@/views/CustomersView.vue'
+import RecommendationsView from '@/views/RecommendationsView.vue'
+import { customers } from '@/data/customers'
+import { generateRecommendation } from '@/utils/recommendationEngine'
 
-const selectedMenuId = ref('home')
+const activeView = ref<ViewId>('overview')
+const selectedCustomerId = ref<number | null>(null)
+const mobileNavOpen = ref(false)
+const recommendations = customers.map(generateRecommendation)
 
-function handleTabSwitch(id: string) {
-  console.log(`当前选中的菜单项 ID: ${id}`)
-  selectedMenuId.value = id
+const selectedCustomer = computed(() => customers.find((customer) => customer.id === selectedCustomerId.value) ?? null)
+const selectedRecommendation = computed(() => recommendations.find((item) => item.customerId === selectedCustomerId.value) ?? null)
+
+const pageMeta = computed(() => {
+  if (activeView.value === 'customers') return { title: 'Customers', subtitle: 'Account health, churn risk and explainable signals' }
+  if (activeView.value === 'recommendations') return { title: 'Retention Actions', subtitle: 'Prioritised next-best actions and revenue impact' }
+  return { title: 'Executive Overview', subtitle: 'Subscription retention intelligence for customer-success teams' }
+})
+
+function navigate(view: ViewId) {
+  activeView.value = view
+}
+
+function openCustomer(customerId: number) {
+  selectedCustomerId.value = customerId
 }
 </script>
 
 <template>
-  <div class="app-layout">
-    <!-- 左侧导航栏组件 -->
-    <LeftNav :defaultCollapsed="false" @change="handleTabSwitch"/>
-
-    <!-- 右侧主区域 -->
-    <main class="main-content">
-      <header class="content-header">
-        <h2>系统顶部栏 (Top Bar)</h2>
-      </header>
-      
-      <section class="content-body">
-        <!-- 2. 使用大驼峰标签，并换成 v-if / v-else-if 结构 -->
-        <Homepage v-if="selectedMenuId === 'home'" />
-        
-        <Dashboard v-else-if="selectedMenuId === 'dashboard'" />
-        
-        <!-- 未来还可以继续优雅地往下加 -->
-        <!-- <Settings v-else-if="selectedMenuId === 'settings'" /> -->
-      </section>
+  <div class="app-shell">
+    <Sidebar :active-view="activeView" :mobile-open="mobileNavOpen" @navigate="navigate" @close="mobileNavOpen = false" />
+    <main class="main-area">
+      <TopBar :title="pageMeta.title" :subtitle="pageMeta.subtitle" @toggle-nav="mobileNavOpen = true" />
+      <OverviewView
+        v-if="activeView === 'overview'"
+        :customers="customers"
+        :recommendations="recommendations"
+        @open-customer="openCustomer"
+        @view-customers="navigate('customers')"
+        @view-actions="navigate('recommendations')"
+      />
+      <CustomersView v-else-if="activeView === 'customers'" :customers="customers" @open-customer="openCustomer" />
+      <RecommendationsView v-else :customers="customers" :recommendations="recommendations" @open-customer="openCustomer" />
     </main>
+
+    <CustomerDetailDrawer
+      v-if="selectedCustomer && selectedRecommendation"
+      :customer="selectedCustomer"
+      :recommendation="selectedRecommendation"
+      @close="selectedCustomerId = null"
+    />
   </div>
 </template>
 
 <style>
-/* 清除浏览器默认边距 */
-
-
-/* 整个页面的 Flex 弹性布局 */
-.app-layout {
-  display: flex;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+:root {
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  background: #f5f6fa;
 }
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f5f7;
-}
-/* 右侧主区域占满剩余空间 */
-.main-content {
-  flex: 1;
-  background-color: #f4f5fc; /* 🌟 核心：微紫浅灰 */
-  color: #313244;
-}
-
-/* 里面的白色卡片 */
-.stat-card, .chart-section, .log-section {
-  background-color: #ffffff;
-  border: 1px solid #e6e9ef;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); /* 极淡的阴影 */
-}
-
-.content-header {
-  background-color: #ffffff;
-  padding: 15px 30px;
-  border-bottom: 1px solid #e5e5e7;
-}
-
-.content-header h2 {
-  margin: 0;
-  font-size: 18px;
-  color: #333;
-}
-
-
-
+* { box-sizing: border-box; }
+html { min-width: 320px; background: #f5f6fa; }
+body { min-width: 320px; min-height: 100vh; margin: 0; background: #f5f6fa; }
+button, input, select { font: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid rgba(112, 86, 223, .25); outline-offset: 2px; }
+.app-shell { display: flex; min-height: 100vh; }
+.main-area { min-width: 0; flex: 1; min-height: 100vh; background: linear-gradient(180deg, #f7f8fc, #f4f5f9); }
+::selection { color: #fff; background: #6d55dd; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { border: 3px solid transparent; border-radius: 99px; background: #c9cdd9; background-clip: padding-box; }
 </style>
