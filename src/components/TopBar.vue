@@ -1,12 +1,12 @@
 <script setup lang="ts">
-defineProps<{ title: string; subtitle: string }>()
+defineProps<{ title: string; subtitle: string ;mobileNavOpen: boolean}>()
 defineEmits<{ toggleNav: [] }>()
 </script>
 
 <template>
   <header class="topbar">
     <div class="title-area">
-      <button class="menu-button" type="button" aria-label="Open navigation" @click="$emit('toggleNav')">
+      <button class="menu-button" v-if="!mobileNavOpen" type="button" aria-label="Open navigation" @click="$emit('toggleNav')">
         <span></span><span></span><span></span>
       </button>
       <div><h1>{{ title }}</h1><p>{{ subtitle }}</p></div>
@@ -31,7 +31,7 @@ p { margin: 4px 0 0; color: #9298aa; font-size: 11px; }
 .user-chip strong, .user-chip small { display: block; text-align: left; }
 .user-chip strong { color: #343a4d; font-size: 10px; }
 .user-chip small { margin-top: 2px; color: #9ca1b2; font-size: 9px; }
-.menu-button { display: none; width: 38px; height: 38px; padding: 9px; border: 1px solid #e5e8f0; border-radius: 11px; background: #fff; cursor: pointer; }
+.menu-button { display: block; width: 38px; height: 38px; padding: 9px; border: 1px solid #e5e8f0; border-radius: 11px; background: #fff; cursor: pointer; }
 .menu-button span { display: block; height: 2px; margin: 4px 0; border-radius: 2px; background: #3d4459; }
 @media (max-width: 900px) { .menu-button { display: block; } .prototype-badge { display: none; } }
 @media (max-width: 620px) { .topbar { padding: 0 16px; } .user-chip div { display: none; } .title-area p { display: none; } }
