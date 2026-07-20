@@ -1,27 +1,23 @@
-# RetentionX Comfort UI v5
+# UX Notes
 
-This redesign addresses the two most important usability issues in the earlier interface: very small typography and excessive information density.
+## Problems addressed
 
-## Readability system
+The previous interface had three main problems:
 
-- Default body text: 14–16px
-- Table content: 14px
-- Supporting text: 12–14px
-- Page titles: 29–42px
-- KPI values: 30–40px
-- Minimum interactive control height: 44px
-- Larger spacing between cards, filters and sections
+1. Text was too small for a presentation and normal laptop use.
+2. Too many equally weighted cards made the screen feel like a pile of information.
+3. Customer details were compressed inside a drawer.
 
-## UX changes
+## v8 solution
 
-- Replaced the dark, high-density sidebar with a bright navigation workspace.
-- Increased sidebar width and navigation hit areas.
-- Increased table row height, avatar size, status badge size and health-bar width.
-- Simplified visual emphasis: one primary purple accent, semantic risk colours, and quieter backgrounds.
-- Enlarged Customer 360 drawer and decision panels.
-- Improved mobile layouts so tables become readable account cards.
-- Preserved all v4 product functions: Customer 360, action queue, scenario lab, strategic insights, CSV import, search and local persistence.
+- Uses a strict content hierarchy: portfolio status → decision → customer action.
+- Limits the overview to four primary KPIs.
+- Uses one large health panel and one priority-action panel rather than many small widgets.
+- Keeps secondary analysis behind More tools.
+- Uses a full Customer 360 page for long-form analysis.
+- Maintains minimum 46px interactive controls.
+- Converts customer tables to cards on small screens.
 
-## Design direction
+## Demo recommendation
 
-The visual system follows a calm B2B SaaS approach: clear typographic hierarchy, modular cards, generous white space, restrained colour, and large operational controls. It is an original implementation rather than a copy of a single reference.
+Present at 100% browser zoom on a 1366×768 or 1920×1080 screen. The selected font scale is designed to remain readable from a projector or shared screen.

@@ -36,7 +36,7 @@ const formatMoney = (amount: number) => `RM ${amount.toLocaleString('en-MY')}`
           <td data-label="Risk"><RiskBadge :level="customer.riskLevel" :probability="customer.churnProbability" /></td>
           <td v-if="!compact" data-label="Usage"><span :class="['usage-value', { weak: customer.featureUsagePct < 35 }]">{{ customer.featureUsagePct }}%</span></td>
           <td data-label="MRR"><strong class="money">{{ formatMoney(customer.monthlyRevenue) }}</strong></td>
-          <td><button class="row-action" type="button" aria-label="View customer" @click.stop="emit('select', customer.id)">↗</button></td>
+          <td><button class="row-action" type="button" aria-label="View customer" @click.stop="emit('select', customer.id)">→</button></td>
         </tr>
       </tbody>
     </table>
@@ -46,44 +46,44 @@ const formatMoney = (amount: number) => `RM ${amount.toLocaleString('en-MY')}`
 
 <style scoped>
 .table-shell { width: 100%; overflow-x: auto; }
-table { width: 100%; min-width: 760px; border-collapse: collapse; }
-th { padding: 11px 16px; color: #9ba0a8; background: #fbfbfc; font-size: 8px; font-weight: 850; text-align: left; text-transform: uppercase; letter-spacing: .09em; border-bottom: 1px solid #eceef0; }
-td { padding: 13px 16px; color: #454b54; font-size: 10px; border-bottom: 1px solid #f0f1f3; vertical-align: middle; }
-tbody tr { cursor: pointer; transition: background .15s ease; }
-tbody tr:hover, tbody tr:focus-visible { outline: 0; background: #f8f7fc; }
+table { width: 100%; min-width: 900px; border-collapse: collapse; }
+th { padding: 17px 22px; color: #69769a; background: #f4f6fb; font-size: 13px; font-weight: 850; text-align: left; text-transform: uppercase; letter-spacing: .08em; border-bottom: 1px solid #e2e6f2; }
+td { padding: 19px 22px; color: #4b625a; font-size: 16px; border-bottom: 1px solid #e9ecf5; vertical-align: middle; }
+tbody tr { cursor: pointer; transition: background .15s ease, transform .15s ease; }
+tbody tr:hover, tbody tr:focus-visible { outline: 0; background: #f0f2ff; }
 tbody tr:last-child td { border-bottom: 0; }
-.company-cell { display: flex; align-items: center; gap: 10px; min-width: 210px; }
-.company-avatar { display: grid; place-items: center; width: 35px; height: 35px; border: 1px solid #e5e2fb; border-radius: 11px; color: #5143c0; background: var(--rx-primary-soft); font-size: 9px; font-weight: 900; }
+.company-cell { display: flex; align-items: center; gap: 14px; min-width: 250px; }
+.company-avatar { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid #b7c8df; border-radius: 15px; color: #5b5bd6; background: #e9edff; font-size: 13px; font-weight: 900; }
 .company-cell strong, .company-cell small { display: block; }
-.company-cell strong { color: #292d33; font-size: 10px; }
-.company-cell small { margin-top: 4px; color: #9ba0a8; font-size: 8px; }
-.plan-tag { padding: 6px 8px; border: 1px solid; border-radius: 8px; font-size: 8px; font-weight: 850; }
-.plan-tag.basic { color: #356c96; border-color: #d4e8f8; background: #eff8ff; }
-.plan-tag.pro { color: #5849c2; border-color: #ddd8fb; background: var(--rx-primary-soft); }
-.plan-tag.enterprise { color: #8c6507; border-color: #efdfb7; background: #fff8e8; }
-.health-cell { display: flex; align-items: center; gap: 8px; }
-.health-cell > span { width: 23px; color: #444a52; font-size: 9px; font-weight: 850; }
-.health-cell > div { width: 62px; height: 5px; overflow: hidden; border-radius: 99px; background: #eceef0; }
-.health-cell i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--rx-danger), #e5a52f 55%, var(--rx-success)); }
-.usage-value { color: #424850; font-weight: 850; }.usage-value.weak { color: var(--rx-danger); }
-.money { color: #292e35; font-size: 9px; white-space: nowrap; }
-.row-action { display: grid; place-items: center; width: 29px; height: 29px; border: 1px solid #dfe1e4; border-radius: 9px; color: #606770; background: #fff; cursor: pointer; }
-.row-action:hover { color: #fff; border-color: var(--rx-primary); background: var(--rx-primary); }
-.empty-table { display: grid; place-items: center; padding: 52px 20px; color: #9298a1; text-align: center; }
-.empty-table > span { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: #f0f1f3; font-size: 21px; }
-.empty-table strong { margin-top: 11px; color: #454b54; font-size: 11px; }.empty-table p { margin: 5px 0 0; font-size: 9px; }
+.company-cell strong { color: #27305f; font-size: 16px; }
+.company-cell small { margin-top: 5px; color: #7a86a6; font-size: 13px; }
+.plan-tag { padding: 8px 11px; border: 1px solid; border-radius: 999px; font-size: 12px; font-weight: 850; }
+.plan-tag.basic { color: #0f7e73; border-color: #bce8e1; background: #eaf3ee; }
+.plan-tag.pro { color: #825d22; border-color: #f2dba7; background: #fbf0d4; }
+.plan-tag.enterprise { color: #a94355; border-color: #edc7c4; background: #fff0f2; }
+.health-cell { display: flex; align-items: center; gap: 11px; }
+.health-cell > span { width: 34px; color: #34406e; font-size: 15px; font-weight: 850; }
+.health-cell > div { width: 92px; height: 9px; overflow: hidden; border-radius: 99px; background: #e7eaf4; }
+.health-cell i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #e45768, #d9a94e 52%, #16b8a6); }
+.usage-value { color: #34406e; font-size: 15px; font-weight: 850; }.usage-value.weak { color: #d94456; }
+.money { color: #27305f; font-size: 15px; white-space: nowrap; }
+.row-action { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid #d8deed; border-radius: 13px; color: #34406e; background: #ffffff; font-size: 20px; cursor: pointer; }
+.row-action:hover { color: #fff; border-color: #5b5bd6; background: #5b5bd6; }
+.empty-table { display: grid; place-items: center; padding: 72px 24px; color: #69769a; text-align: center; }
+.empty-table > span { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 17px; background: #e9edf7; font-size: 26px; }
+.empty-table strong { margin-top: 14px; color: #34406e; font-size: 18px; }.empty-table p { margin: 7px 0 0; font-size: 15px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
-@media (max-width: 640px) {
+@media (max-width: 700px) {
   .table-shell { overflow: visible; }
   table, thead, tbody, tr, td { display: block; min-width: 0; }
   thead { display: none; }
-  tbody { display: grid; gap: 10px; padding: 10px; }
-  tbody tr { position: relative; padding: 13px; border: 1px solid var(--rx-border); border-radius: 14px; background: #fff; }
-  td { display: flex; align-items: center; justify-content: space-between; min-height: 34px; padding: 5px 0; border: 0; }
-  td::before { content: attr(data-label); color: #9aa0a8; font-size: 8px; font-weight: 850; text-transform: uppercase; letter-spacing: .06em; }
-  td:first-child { display: block; padding-bottom: 10px; border-bottom: 1px solid #eff0f2; }
+  tbody { display: grid; gap: 14px; padding: 14px; }
+  tbody tr { position: relative; padding: 18px; border: 1px solid #dfe3f1; border-radius: 18px; background: #ffffff; }
+  td { display: flex; align-items: center; justify-content: space-between; min-height: 43px; padding: 7px 0; border: 0; }
+  td::before { content: attr(data-label); color: #69769a; font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .06em; }
+  td:first-child { display: block; padding-bottom: 14px; border-bottom: 1px solid #e8ebf4; }
   td:first-child::before, td:last-child::before { display: none; }
-  td:last-child { position: absolute; top: 13px; right: 13px; }
-  .company-cell { min-width: 0; padding-right: 42px; }
+  td:last-child { position: absolute; top: 18px; right: 18px; }
+  .company-cell { min-width: 0; padding-right: 50px; }
 }
 </style>

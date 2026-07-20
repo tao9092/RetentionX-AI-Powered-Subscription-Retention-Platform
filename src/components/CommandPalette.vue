@@ -89,7 +89,7 @@ kbd { display: inline-grid; place-items: center; min-width: 25px; min-height: 23
 .command-results button { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; width: 100%; padding: 11px 10px; border: 0; border-radius: 12px; color: inherit; background: transparent; text-align: left; cursor: pointer; }
 .command-results button:hover, .command-results button.current { background: #f5f4fb; }
 .customer-avatar, .page-icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; font-size: 11px; font-weight: 900; }
-.customer-avatar { color: #4e42bd; background: var(--rx-primary-soft); }
+.customer-avatar { color: #5b5bd6; background: var(--rx-primary-soft); }
 .page-icon { color: #47505b; background: #f0f1f3; font-size: 15px; }
 .result-copy { min-width: 0; }
 .result-copy strong, .result-copy small, .risk-copy strong, .risk-copy small { display: block; }

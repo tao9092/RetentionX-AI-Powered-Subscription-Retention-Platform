@@ -131,10 +131,10 @@ h2 { margin: 8px 0 7px; color: var(--rx-ink); font-size: clamp(25px, 3vw, 34px);
 .portfolio-chip strong { margin-top: 5px; color: #30343a; font-size: 15px; letter-spacing: -.025em; }
 .portfolio-chip small { margin-top: 3px; color: var(--rx-danger); font-size: 8px; }
 .export-button { display: flex; align-items: center; gap: 8px; min-width: 112px; padding: 0 14px; border: 0; border-radius: 13px; color: var(--rx-lime-ink); background: var(--rx-lime); font-size: 9px; font-weight: 850; cursor: pointer; }
-.export-button:hover { background: #e2ff91; }.export-button span { font-size: 14px; }
+.export-button:hover { background: #55e3d5; }.export-button span { font-size: 14px; }
 .filter-panel { overflow: hidden; border: 1px solid var(--rx-border); border-radius: 18px; background: var(--rx-surface); box-shadow: var(--rx-shadow-sm); }
 .filter-topline { display: flex; gap: 12px; padding: 13px; border-bottom: 1px solid #eff0f2; }
-.search-field { display: grid; grid-template-columns: auto 1fr auto; gap: 9px; align-items: center; flex: 1; min-height: 41px; padding: 0 11px; border: 1px solid var(--rx-border-strong); border-radius: 11px; background: #fafafb; }
+.search-field { display: grid; grid-template-columns: auto 1fr auto; gap: 9px; align-items: center; flex: 1; min-height: 41px; padding: 0 11px; border: 1px solid var(--rx-border-strong); border-radius: 11px; background: #fbfcff; }
 .search-field svg { width: 17px; height: 17px; fill: none; stroke: #747b84; stroke-width: 1.8; }
 .search-field input { width: 100%; border: 0; outline: 0; color: #353a41; background: transparent; font-size: 10px; }
 kbd { min-width: 22px; padding: 4px; border: 1px solid #dedfe3; border-radius: 6px; color: #9298a1; background: #fff; font: 750 8px/1 Inter, sans-serif; text-align: center; }
@@ -142,7 +142,7 @@ kbd { min-width: 22px; padding: 4px; border: 1px solid #dedfe3; border-radius: 6
 .risk-tabs button { min-width: 59px; border: 0; border-radius: 8px; color: #858b94; background: transparent; font-size: 8px; font-weight: 800; cursor: pointer; }
 .risk-tabs button:hover { color: #4b515a; }.risk-tabs button.active { color: #fff; background: #1d2024; box-shadow: 0 2px 7px rgba(20,23,29,.12); }
 .filter-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 11px 13px; }
-.filter-controls label { display: flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 9px; border: 1px solid var(--rx-border); border-radius: 10px; background: #fafafb; }
+.filter-controls label { display: flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 9px; border: 1px solid var(--rx-border); border-radius: 10px; background: #fbfcff; }
 .filter-controls label > span { color: #9da2aa; font-size: 7.5px; font-weight: 850; text-transform: uppercase; letter-spacing: .06em; }
 .filter-controls select { min-width: 88px; border: 0; outline: 0; color: #4a5058; background: transparent; font-size: 9px; font-weight: 750; }
 .result-count { margin-left: auto; color: #969ba4; font-size: 8.5px; }.result-count strong { color: #464c54; }

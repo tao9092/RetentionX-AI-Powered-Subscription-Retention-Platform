@@ -1,73 +1,56 @@
-# RetentionX Preliminary Round 演示稿（约 4 分钟）
+# RetentionX Preliminary Demo Script
 
-## 1. 问题（20 秒）
+## 0:00–0:30 问题
 
-订阅公司往往在客户取消后才知道客户不满意。实际上，登录下降、功能使用不足、未解决投诉、付款异常和续约临近，通常会更早出现。
+订阅公司通常在客户取消后才发现问题。RetentionX 会结合使用量、功能采用率、客服、付款和续约资料，提前发现高风险客户。
 
-RetentionX 的目标是回答四个问题：谁可能离开、为什么、应该怎么处理，以及能保护多少收入。
+## 0:30–1:10 Overview
 
-## 2. Executive Overview（40 秒）
+展示四个核心指标：
 
-打开 Overview：
+- Total customers
+- High-risk customers
+- Under-utilised accounts
+- Revenue at risk
 
-- 先指出 Today’s Focus，让评审马上看到系统建议优先处理哪一个客户。
+然后指出 Recoverable Annual Revenue 和 Today’s Priority，让评审看到系统不只是提供数据，而是在指导公司先处理谁。
 
-- 指出高风险客户数量。
-- 指出 Monthly Revenue at Risk。
-- 说明系统不是只显示流失率，而是把风险转换成收入影响和优先行动。
+## 1:10–2:05 Customer 360
 
-## 3. 快速搜索体验（15 秒）
+打开一个高风险客户。
 
-按 `Ctrl + K`：
+说明：
 
-- 搜索 CloudNine Commerce。
-- 展示可以在同一个入口打开客户，或直接跳到 Actions、Scenario Lab 和 Data Studio。
-- 说明这让 Customer Success Manager 不需要在多个页面之间慢慢寻找客户。
+- Health Score
+- Churn Probability
+- Revenue at Risk
+- Feature Usage
+- Seat Utilisation
+- Days to Renewal
 
-## 4. Strategic Insights（40 秒）
+展示 Explainable Risk，说明系统为什么判断客户可能离开。
 
-打开 Insights：
+## 2:05–2:45 Next Best Action
 
-- 展示 Risk × Value Matrix。
-- 指出 Protect Now 区域代表高风险、高价值客户。
-- 展示未来 30 天续约的 MRR。
-- 展示行业热点和最常见风险原因。
-- 强调管理层可以打印这个页面作为 Executive Report。
+展示系统建议，例如解决工单、提供 onboarding 或调整套餐。
 
-## 5. Customer 360（40 秒）
+强调：系统同时给出 Priority、Target Timeframe、Estimated Risk Reduction 和 Potential Revenue Protected。
 
-点击 CloudNine Commerce：
+## 2:45–3:20 Scenario Lab
 
-- 展示 churn probability 与 health score。
-- 展示登录下降、低功能使用、未解决投诉和低满意度。
-- 说明 RetentionX 的结果可解释，不是只有一个黑箱数字。
+进入 Scenario Lab，对比不同挽留方案的成本、预测风险和收入影响。
 
-## 6. Scenario Lab（45 秒）
+说明这些数字目前是 Directional Estimation，而不是未经验证的因果结果。
 
-进入 Scenario Lab：
+## 3:20–3:50 Action Queue
 
-- 比较 No Action、Support Recovery、Guided Onboarding、Plan Right-size 和 Combined Recovery。
-- 指出 projected risk、cost、revenue protected、net benefit 和 ROI。
-- 明确说明这些是方向性情景估算，不是假装成真实因果保证。
-- 把最佳方案加入 Action Queue。
+将方案加入 Action Queue，并更新为 Planned 或 In Progress，说明 Customer Success 团队可以直接执行和追踪。
 
-## 7. Retention Actions（25 秒）
+## 3:50–4:00 总结
 
-打开 Actions：
+RetentionX 帮助公司回答四个问题：
 
-- 显示系统按风险、收入和可挽回程度排序。
-- 把状态设为 Planned 或 In Progress。
-- 刷新后状态仍然保留，说明这不是纯静态图表。
-
-## 8. Data Studio（35 秒）
-
-最后打开 Data Studio：
-
-- 下载 CSV Template。
-- 上传模板并展示验证结果。
-- 展示有效记录、错误行、High Risk 数量和 Imported MRR。
-- Apply to workspace 后，整个 Dashboard 使用上传数据重新计算。
-
-结束句：
-
-> RetentionX turns disconnected customer data into an explainable and actionable retention workflow—from ingestion, to prediction, to intervention, to measurable revenue impact.
+1. 谁可能离开？
+2. 为什么可能离开？
+3. 应该采取什么行动？
+4. 可以保护多少订阅收入？

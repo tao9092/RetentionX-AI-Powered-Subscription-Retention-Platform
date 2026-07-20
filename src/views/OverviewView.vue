@@ -12,11 +12,12 @@ const formatMoney = (amount: number) => `RM ${Math.round(amount).toLocaleString(
 const highRiskCustomers = computed(() => props.customers.filter((c) => c.riskLevel === 'High').sort((a, b) => b.monthlyRevenueAtRisk - a.monthlyRevenueAtRisk || b.churnProbability - a.churnProbability))
 const underUtilized = computed(() => props.customers.filter((c) => c.underUtilized))
 const monthlyRevenueAtRisk = computed(() => props.customers.reduce((sum, customer) => sum + customer.monthlyRevenueAtRisk, 0))
+const annualRevenueAtRisk = computed(() => monthlyRevenueAtRisk.value * 12)
 const recoverableRevenue = computed(() => props.recommendations.reduce((sum, item) => sum + item.potentialRevenueProtected, 0))
-const activeActions = computed(() => Object.values(props.actionStatuses).filter((status) => status === 'Planned' || status === 'In progress').length)
-const completedActions = computed(() => Object.values(props.actionStatuses).filter((status) => status === 'Completed').length)
 const untouchedHighRisk = computed(() => highRiskCustomers.value.filter((customer) => !props.actionStatuses[String(customer.id)] || props.actionStatuses[String(customer.id)] === 'Not started'))
 const actionCoverage = computed(() => Math.round(((highRiskCustomers.value.length - untouchedHighRisk.value.length) / Math.max(highRiskCustomers.value.length, 1)) * 100))
+const averageHealth = computed(() => Math.round(props.customers.reduce((sum, customer) => sum + customer.healthScore, 0) / Math.max(props.customers.length, 1)))
+const recoveryRate = computed(() => Math.min(100, Math.round((recoverableRevenue.value / Math.max(annualRevenueAtRisk.value, 1)) * 100)))
 
 const riskDistribution = computed(() => {
   const total = props.customers.length
@@ -31,20 +32,10 @@ const planRisk = computed(() => {
   return plans.map((plan) => {
     const group = props.customers.filter((customer) => customer.plan === plan)
     const value = group.reduce((sum, customer) => sum + customer.monthlyRevenueAtRisk, 0)
-    const count = group.filter((customer) => customer.riskLevel === 'High').length
-    return { plan, value, count }
+    return { plan, value, count: group.filter((customer) => customer.riskLevel === 'High').length }
   })
 })
-
 const maxPlanRisk = computed(() => Math.max(...planRisk.value.map((item) => item.value), 1))
-
-const riskDrivers = computed(() => {
-  const counts = new Map<string, number>()
-  props.customers.filter((c) => c.riskLevel !== 'Low').forEach((customer) => {
-    customer.riskReasons.slice(0, 3).forEach((reason) => counts.set(reason.category, (counts.get(reason.category) ?? 0) + 1))
-  })
-  return Array.from(counts.entries()).sort((a, b) => b[1] - a[1]).slice(0, 4)
-})
 
 const focusAccount = computed(() => highRiskCustomers.value[0] ?? props.customers[0])
 const focusRecommendation = computed(() => props.recommendations.find((item) => item.customerId === focusAccount.value?.id))
@@ -52,180 +43,204 @@ const focusRecommendation = computed(() => props.recommendations.find((item) => 
 
 <template>
   <div class="overview-page">
-    <section class="briefing-grid">
-      <article class="briefing-card">
-        <div class="briefing-copy">
-          <span class="eyebrow">Portfolio signal briefing</span>
-          <h2>{{ highRiskCustomers.length }} accounts need attention before renewal.</h2>
-          <p>RetentionX prioritises customers by churn probability, commercial value and intervention potential—not risk score alone.</p>
-          <div class="briefing-actions">
-            <button class="primary-button" type="button" @click="emit('viewActions')">Review priority actions <span>→</span></button>
-            <button class="secondary-button" type="button" @click="emit('viewScenarios')">Compare scenarios</button>
+    <section class="portfolio-hero">
+      <div class="hero-copy">
+        <span class="hero-label"><i></i> Portfolio pulse</span>
+        <h2>Protect recurring revenue before customers decide to leave.</h2>
+        <p>RetentionX turns usage, support and payment signals into a clear daily action plan for customer-success teams.</p>
+        <div class="hero-actions">
+          <button class="primary-button" type="button" @click="emit('viewActions')">Review priority actions <span>→</span></button>
+          <button class="secondary-button" type="button" @click="emit('viewScenarios')">Compare scenarios</button>
+        </div>
+      </div>
+
+      <div class="recovery-summary">
+        <span>Recoverable annual revenue</span>
+        <strong>{{ formatMoney(recoverableRevenue) }}</strong>
+        <div class="recovery-track"><i :style="{ width: `${recoveryRate}%` }"></i></div>
+        <div class="recovery-meta">
+          <div><b>{{ recoveryRate }}%</b><span>of annual risk can be protected</span></div>
+          <div><b>{{ actionCoverage }}%</b><span>of high-risk accounts have an action</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="metric-grid" aria-label="Portfolio metrics">
+      <MetricCard label="Total customers" :value="customers.length.toLocaleString()" helper="Active subscription relationships" icon="customers" tone="purple" />
+      <MetricCard label="High-risk customers" :value="highRiskCustomers.length.toString()" :helper="`${untouchedHighRisk.length} still need an owner`" icon="risk" tone="red" />
+      <MetricCard label="Under-utilised accounts" :value="underUtilized.length.toString()" helper="Plan or seat mismatch detected" icon="usage" tone="amber" />
+      <MetricCard label="Revenue at risk" :value="formatMoney(monthlyRevenueAtRisk)" helper="Probability-weighted monthly exposure" icon="revenue" tone="blue" />
+    </section>
+
+    <section class="decision-grid">
+      <article class="panel health-panel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">Customer health</span>
+            <h3>Portfolio risk overview</h3>
+            <p>See the current churn mix and where revenue exposure is concentrated.</p>
           </div>
+          <span class="live-chip"><i></i> Live snapshot</span>
         </div>
-        <div class="briefing-signal">
-          <div class="signal-top"><span>Recoverable annual revenue</span><i>Live model</i></div>
-          <strong>{{ formatMoney(recoverableRevenue) }}</strong>
-          <div class="signal-foot"><span><b>{{ activeActions }}</b> active</span><span><b>{{ completedActions }}</b> completed</span><span><b>{{ actionCoverage }}%</b> covered</span></div>
-        </div>
-      </article>
 
-      <article v-if="focusAccount && focusRecommendation" class="focus-card">
-        <header><span class="eyebrow">Today’s focus</span><span class="priority-dot"></span></header>
-        <div class="focus-customer">
-          <span class="focus-avatar">{{ focusAccount.companyName.slice(0, 2).toUpperCase() }}</span>
-          <div><strong>{{ focusAccount.companyName }}</strong><small>{{ focusAccount.plan }} · {{ focusAccount.industry }}</small></div>
-          <span class="focus-risk">{{ focusAccount.churnProbability }}%</span>
-        </div>
-        <p>{{ focusRecommendation.action }}</p>
-        <div class="focus-meta"><span>Protect <strong>{{ formatMoney(focusRecommendation.potentialRevenueProtected) }}</strong></span><span>{{ focusRecommendation.timeframe }}</span></div>
-        <button type="button" @click="emit('openCustomer', focusAccount.id)">Open customer 360 <span>↗</span></button>
-      </article>
-    </section>
+        <div class="health-body">
+          <div class="health-donut" :style="{ '--high': `${riskDistribution[0]?.pct ?? 0}%`, '--medium': `${(riskDistribution[0]?.pct ?? 0) + (riskDistribution[1]?.pct ?? 0)}%` }">
+            <div><strong>{{ averageHealth }}</strong><span>Average health</span></div>
+          </div>
 
-    <section class="metric-grid">
-      <MetricCard label="Portfolio accounts" :value="customers.length.toLocaleString()" helper="Active subscription relationships" icon="customers" tone="purple" />
-      <MetricCard label="High-risk accounts" :value="highRiskCustomers.length.toString()" :helper="`${untouchedHighRisk.length} still unassigned`" icon="risk" tone="red" />
-      <MetricCard label="Under-utilised" :value="underUtilized.length.toString()" helper="Plan or seat mismatch detected" icon="usage" tone="amber" />
-      <MetricCard label="Monthly risk exposure" :value="formatMoney(monthlyRevenueAtRisk)" helper="Probability-weighted recurring revenue" icon="revenue" tone="blue" />
-    </section>
-
-    <section class="analytics-grid">
-      <article class="panel risk-panel">
-        <div class="panel-heading"><div><span class="eyebrow">Portfolio health</span><h3>Churn risk distribution</h3><p>Current account mix by predicted churn band.</p></div><span class="period-chip">Current snapshot</span></div>
-        <div class="risk-overview">
-          <div class="donut" :style="{ '--high': `${riskDistribution[0]?.pct ?? 0}%`, '--medium': `${(riskDistribution[0]?.pct ?? 0) + (riskDistribution[1]?.pct ?? 0)}%` }"><div><strong>{{ highRiskCustomers.length }}</strong><span>high risk</span></div></div>
-          <div class="risk-bars">
-            <div v-for="item in riskDistribution" :key="item.level" class="risk-row" :class="item.level.toLowerCase()">
-              <div><span><i></i>{{ item.level }}</span><strong>{{ item.count }}</strong></div>
+          <div class="risk-breakdown">
+            <div v-for="item in riskDistribution" :key="item.level" class="risk-line" :class="item.level.toLowerCase()">
+              <div><span><i></i>{{ item.level }} risk</span><strong>{{ item.count }} accounts</strong></div>
               <div class="bar-track"><i :style="{ width: `${item.pct}%` }"></i></div>
-              <small>{{ item.pct }}% of portfolio</small>
+              <small>{{ item.pct }}% of the customer portfolio</small>
             </div>
           </div>
         </div>
-      </article>
 
-      <article class="panel plan-panel">
-        <div class="panel-heading"><div><span class="eyebrow">Commercial exposure</span><h3>Revenue at risk by plan</h3><p>Monthly risk weighted by account value.</p></div><span class="period-chip">MRR</span></div>
-        <div class="plan-bars">
-          <div v-for="item in planRisk" :key="item.plan" class="plan-row">
-            <div class="plan-value"><span>{{ item.plan }}</span><strong>{{ formatMoney(item.value) }}</strong><small>{{ item.count }} high risk</small></div>
-            <div class="vertical-track"><i :style="{ height: `${Math.max(8, (item.value / maxPlanRisk) * 100)}%` }"></i></div>
+        <div class="plan-exposure">
+          <div v-for="item in planRisk" :key="item.plan">
+            <span>{{ item.plan }}</span>
+            <strong>{{ formatMoney(item.value) }}</strong>
+            <div><i :style="{ width: `${Math.max(8, (item.value / maxPlanRisk) * 100)}%` }"></i></div>
+            <small>{{ item.count }} high-risk accounts</small>
           </div>
         </div>
       </article>
-    </section>
 
-    <section class="bottom-grid">
-      <article class="panel customer-panel">
-        <div class="panel-heading"><div><span class="eyebrow">Priority queue</span><h3>Accounts requiring immediate action</h3><p>Ranked by revenue exposure and churn likelihood.</p></div><button type="button" @click="emit('viewCustomers')">View all <span>→</span></button></div>
-        <CustomerTable :customers="highRiskCustomers.slice(0, 5)" compact @select="emit('openCustomer', $event)" />
-      </article>
-
-      <article class="panel driver-panel">
-        <div class="panel-heading"><div><span class="eyebrow">Explainability</span><h3>Top churn drivers</h3><p>Most frequent signals in priority accounts.</p></div></div>
-        <div class="driver-list">
-          <div v-for="([driver, count], index) in riskDrivers" :key="driver">
-            <span class="driver-rank">{{ String(index + 1).padStart(2, '0') }}</span>
-            <div><strong>{{ driver }}</strong><small>Detected in {{ count }} priority accounts</small></div>
-            <span class="driver-count">{{ count }}</span>
-          </div>
+      <article v-if="focusAccount && focusRecommendation" class="priority-panel">
+        <div class="panel-heading compact">
+          <div><span class="eyebrow light">Next best action</span><h3>Today’s priority</h3></div>
+          <span class="priority-pill">Critical</span>
         </div>
-        <div class="insight-box"><span>✦</span><p><strong>Best next move</strong>Resolve customer friction before discounting. Support issues are the most actionable signal in the current portfolio.</p></div>
+
+        <button class="priority-customer" type="button" @click="emit('openCustomer', focusAccount.id)">
+          <span class="focus-avatar">{{ focusAccount.companyName.slice(0, 2).toUpperCase() }}</span>
+          <span><strong>{{ focusAccount.companyName }}</strong><small>{{ focusAccount.plan }} · {{ formatMoney(focusAccount.monthlyRevenue) }}/month</small></span>
+          <b>{{ focusAccount.churnProbability }}%</b>
+        </button>
+
+        <div class="action-copy">
+          <span>Recommended intervention</span>
+          <h4>{{ focusRecommendation.action }}</h4>
+          <p>{{ focusRecommendation.explanation }}</p>
+        </div>
+
+        <div class="action-value-grid">
+          <div><span>Potential revenue protected</span><strong>{{ formatMoney(focusRecommendation.potentialRevenueProtected) }}</strong></div>
+          <div><span>Recommended timeframe</span><strong>{{ focusRecommendation.timeframe }}</strong></div>
+        </div>
+
+        <button class="priority-cta" type="button" @click="emit('openCustomer', focusAccount.id)">Open customer 360 <span>→</span></button>
       </article>
     </section>
+
+    <section class="panel customer-panel">
+      <div class="panel-heading table-heading">
+        <div>
+          <span class="eyebrow">Priority accounts</span>
+          <h3>High-risk customers</h3>
+          <p>Start with accounts that combine high churn probability and meaningful recurring revenue.</p>
+        </div>
+        <button type="button" @click="emit('viewCustomers')">View all customers →</button>
+      </div>
+      <CustomerTable :customers="highRiskCustomers.slice(0, 5)" compact @select="emit('openCustomer', $event)" />
+    </section>
+
+    <p class="overview-note">Directional decision support based on the active dataset. Production use requires validated historical outcomes.</p>
   </div>
 </template>
 
 <style scoped>
-.overview-page { display: grid; gap: 18px; width: min(100%, 1540px); margin: 0 auto; padding: 24px 26px 42px; }
-.eyebrow { display: block; color: var(--rx-primary); font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: .14em; }
-.briefing-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(270px, .65fr); gap: 14px; }
-.briefing-card { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(250px, .65fr); gap: 24px; align-items: stretch; min-height: 224px; padding: 27px; border: 1px solid #262a30; border-radius: 22px; color: #fff; background: radial-gradient(circle at 78% 0%, rgba(113, 92, 240, .34), transparent 32%), #17191d; box-shadow: 0 18px 44px rgba(20,23,29,.12); }
-.briefing-card::after { content: ''; position: absolute; right: -42px; bottom: -84px; width: 210px; height: 210px; border: 1px solid rgba(216,255,114,.15); border-radius: 50%; }
-.briefing-copy { position: relative; z-index: 1; }
-.briefing-copy .eyebrow { color: var(--rx-lime); }
-.briefing-copy h2 { max-width: 660px; margin: 10px 0 10px; color: #fff; font-size: clamp(25px, 3vw, 38px); line-height: 1.06; letter-spacing: -.05em; }
-.briefing-copy p { max-width: 620px; margin: 0; color: #9299a4; font-size: 11px; line-height: 1.65; }
-.briefing-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
-.primary-button, .secondary-button { min-height: 39px; padding: 0 13px; border-radius: 11px; font-size: 9px; font-weight: 850; cursor: pointer; }
-.primary-button { display: inline-flex; align-items: center; gap: 14px; border: 0; color: var(--rx-lime-ink); background: var(--rx-lime); }
-.primary-button:hover { background: #e1ff8e; }
-.primary-button span { font-size: 14px; }
-.secondary-button { border: 1px solid #383c42; color: #cbd0d6; background: #23262b; }
-.secondary-button:hover { border-color: #4a4f56; background: #292d32; }
-.briefing-signal { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px; border: 1px solid #34383e; border-radius: 17px; background: rgba(255,255,255,.045); }
-.signal-top { display: flex; align-items: center; justify-content: space-between; color: #8f969f; font-size: 8px; text-transform: uppercase; letter-spacing: .08em; }
-.signal-top i { padding: 5px 7px; border: 1px solid rgba(216,255,114,.24); border-radius: 7px; color: var(--rx-lime); background: rgba(216,255,114,.07); font-style: normal; font-weight: 850; }
-.briefing-signal > strong { margin: 11px 0 17px; color: #fff; font-size: clamp(27px, 3vw, 38px); line-height: 1; letter-spacing: -.05em; }
-.signal-foot { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
-.signal-foot span { padding: 9px; border-radius: 10px; color: #858c95; background: #202328; font-size: 8px; }
-.signal-foot b { display: block; margin-bottom: 4px; color: #f0f2f4; font-size: 11px; }
-.focus-card { display: flex; flex-direction: column; min-height: 224px; padding: 19px; border: 1px solid var(--rx-border); border-radius: 22px; background: var(--rx-surface); box-shadow: var(--rx-shadow-sm); }
-.focus-card header { display: flex; align-items: center; justify-content: space-between; }
-.priority-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--rx-danger); box-shadow: 0 0 0 5px rgba(223,75,100,.1); }
-.focus-customer { display: grid; grid-template-columns: auto 1fr auto; gap: 11px; align-items: center; margin-top: 18px; }
-.focus-avatar { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; color: #4438b2; background: var(--rx-primary-soft); font-size: 10px; font-weight: 900; }
-.focus-customer strong, .focus-customer small { display: block; }
-.focus-customer strong { color: #292d33; font-size: 11px; }
-.focus-customer small { margin-top: 4px; color: #979ca5; font-size: 8px; }
-.focus-risk { padding: 7px 8px; border-radius: 9px; color: var(--rx-danger); background: var(--rx-danger-soft); font-size: 10px; font-weight: 900; }
-.focus-card > p { flex: 1; margin: 15px 0; color: #5f6670; font-size: 10px; line-height: 1.55; }
-.focus-meta { display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid #eff0f2; color: #9298a1; font-size: 8px; }
-.focus-meta strong { color: #373c43; }
-.focus-card > button { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 37px; padding: 0 11px; border: 1px solid var(--rx-border-strong); border-radius: 10px; color: #444a53; background: #fafafb; font-size: 9px; font-weight: 800; cursor: pointer; }
-.focus-card > button:hover { border-color: #c9ccd1; background: #f5f5f7; }
-.metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-.analytics-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr); gap: 14px; }
-.bottom-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(300px, .65fr); gap: 14px; }
-.panel { overflow: hidden; border: 1px solid var(--rx-border); border-radius: 20px; background: var(--rx-surface); box-shadow: var(--rx-shadow-sm); }
-.panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; padding: 19px 20px 0; }
-.panel-heading h3 { margin: 5px 0 0; color: #2b2f35; font-size: 14px; letter-spacing: -.025em; }
-.panel-heading p { margin: 4px 0 0; color: #a0a5ad; font-size: 8.5px; }
-.period-chip { padding: 6px 8px; border: 1px solid var(--rx-border); border-radius: 8px; color: #838993; background: #fafafa; font-size: 8px; font-weight: 800; }
-.panel-heading button { padding: 7px 9px; border: 0; color: var(--rx-primary); background: transparent; font-size: 9px; font-weight: 850; cursor: pointer; }
-.panel-heading button span { margin-left: 7px; }
-.risk-overview { display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: center; padding: 21px 23px 24px; }
-.donut { position: relative; display: grid; place-items: center; width: 146px; height: 146px; margin: auto; border-radius: 50%; background: conic-gradient(var(--rx-danger) 0 var(--high), #e2a02f var(--high) var(--medium), var(--rx-success) var(--medium) 100%); }
-.donut::before { content: ''; position: absolute; width: 104px; height: 104px; border-radius: 50%; background: #fff; }
-.donut > div { position: relative; z-index: 1; text-align: center; }
-.donut strong, .donut span { display: block; }
-.donut strong { color: #2c3036; font-size: 28px; letter-spacing: -.05em; }
-.donut span { margin-top: 2px; color: #9a9fa8; font-size: 8px; text-transform: uppercase; letter-spacing: .09em; }
-.risk-bars { display: grid; gap: 15px; }
-.risk-row > div:first-child { display: flex; justify-content: space-between; color: #656b75; font-size: 9px; }
-.risk-row > div:first-child span { display: inline-flex; align-items: center; gap: 7px; }
-.risk-row > div:first-child i { width: 7px; height: 7px; border-radius: 50%; }
-.risk-row.high i { background: var(--rx-danger); }.risk-row.medium i { background: #e2a02f; }.risk-row.low i { background: var(--rx-success); }
-.risk-row strong { color: #353a41; font-size: 10px; }
-.bar-track { height: 6px; margin: 7px 0 5px; overflow: hidden; border-radius: 99px; background: #eff0f2; }
+.overview-page { display: grid; gap: 24px; max-width: 1640px; margin: 0 auto; padding: 32px clamp(24px, 3vw, 48px) 56px; }
+.portfolio-hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(400px, .75fr); gap: 36px; align-items: center; min-height: 340px; padding: 42px; border-radius: 30px; color: #fff; background: linear-gradient(135deg, #302e81 0%, #4f46c8 70%, #16a99a 100%); box-shadow: 0 24px 60px rgba(98,92,246,.20); }
+.hero-label { display: inline-flex; align-items: center; gap: 9px; color: #dff7f3; font-size: 13px; font-weight: 850; text-transform: uppercase; letter-spacing: .12em; }
+.hero-label i { width: 10px; height: 10px; border-radius: 50%; background: #39d0c2; box-shadow: 0 0 0 6px rgba(242,207,120,.14); }
+.hero-copy h2 { max-width: 760px; margin: 18px 0 0; font-size: clamp(42px, 4vw, 64px); line-height: 1.03; letter-spacing: -.055em; }
+.hero-copy p { max-width: 710px; margin: 20px 0 0; color: #d7deed; font-size: 18px; line-height: 1.65; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.primary-button, .secondary-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 54px; padding: 0 19px; border-radius: 15px; font-size: 16px; font-weight: 850; cursor: pointer; }
+.primary-button { border: 0; color: #1f2753; background: #39d0c2; box-shadow: 0 10px 24px rgba(0,0,0,.12); }
+.primary-button:hover { transform: translateY(-2px); background: #69ded2; }
+.secondary-button { border: 1px solid rgba(255,255,255,.25); color: #fff; background: rgba(255,255,255,.08); }
+.secondary-button:hover { background: rgba(255,255,255,.15); }
+.recovery-summary { padding: 30px; border: 1px solid rgba(255,255,255,.23); border-radius: 24px; background: rgba(255,255,255,.1); backdrop-filter: blur(12px); }
+.recovery-summary > span { color: #d7deed; font-size: 15px; font-weight: 750; }
+.recovery-summary > strong { display: block; margin-top: 12px; font-size: clamp(40px, 4vw, 58px); line-height: 1; letter-spacing: -.055em; }
+.recovery-track { height: 12px; margin: 28px 0 20px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.14); }
+.recovery-track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #39d0c2, #81ded2); }
+.recovery-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.recovery-meta div { padding: 16px; border-radius: 15px; background: rgba(255,255,255,.08); }
+.recovery-meta b, .recovery-meta span { display: block; }
+.recovery-meta b { font-size: 21px; }.recovery-meta span { margin-top: 6px; color: #cad5e7; font-size: 13px; line-height: 1.45; }
+.metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.decision-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(370px, .55fr); gap: 22px; }
+.panel, .priority-panel { overflow: hidden; border: 1px solid #dfe3f1; border-radius: 26px; background: #ffffff; box-shadow: 0 14px 36px rgba(44,65,57,.06); }
+.panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding: 28px 30px 0; }
+.panel-heading h3 { margin: 8px 0 0; color: #1f2753; font-size: 28px; letter-spacing: -.04em; }
+.panel-heading p { margin: 9px 0 0; color: #69769a; font-size: 15px; line-height: 1.55; }
+.eyebrow { color: #5c6b91; font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .12em; }.eyebrow.light { color: #b3c3d8; }
+.live-chip { display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border: 1px solid #d8deed; border-radius: 999px; color: #5c6b91; background: #f1f3fb; font-size: 13px; font-weight: 750; white-space: nowrap; }
+.live-chip i { width: 9px; height: 9px; border-radius: 50%; background: #16b8a6; }
+.health-body { display: grid; grid-template-columns: 230px 1fr; gap: 38px; align-items: center; padding: 34px 34px 28px; }
+.health-donut { position: relative; display: grid; place-items: center; width: 192px; height: 192px; margin: auto; border-radius: 50%; background: conic-gradient(#e45768 0 var(--high), #e9a23b var(--high) var(--medium), #16b8a6 var(--medium) 100%); }
+.health-donut::before { content: ''; position: absolute; width: 142px; height: 142px; border-radius: 50%; background: #ffffff; }
+.health-donut > div { position: relative; z-index: 1; text-align: center; }
+.health-donut strong, .health-donut span { display: block; }
+.health-donut strong { color: #1f2753; font-size: 48px; letter-spacing: -.06em; }
+.health-donut span { margin-top: 4px; color: #69769a; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+.risk-breakdown { display: grid; gap: 23px; }
+.risk-line > div:first-child { display: flex; justify-content: space-between; gap: 14px; color: #59688d; font-size: 15px; font-weight: 750; }
+.risk-line > div:first-child span { display: inline-flex; align-items: center; gap: 10px; }
+.risk-line > div:first-child i { width: 10px; height: 10px; border-radius: 50%; }
+.risk-line.high i { background: #e45768; }.risk-line.medium i { background: #e9a23b; }.risk-line.low i { background: #16b8a6; }
+.risk-line strong { color: #27305f; font-size: 15px; }
+.bar-track { height: 10px; margin: 10px 0 8px; overflow: hidden; border-radius: 99px; background: #e6eaf4; }
 .bar-track i { display: block; height: 100%; border-radius: inherit; }
-.risk-row.high .bar-track i { background: var(--rx-danger); }.risk-row.medium .bar-track i { background: #e2a02f; }.risk-row.low .bar-track i { background: var(--rx-success); }
-.risk-row small { color: #a2a7af; font-size: 8px; }
-.plan-bars { display: flex; align-items: end; gap: 16px; height: 220px; padding: 25px 25px 20px; }
-.plan-row { display: flex; flex: 1; flex-direction: column-reverse; height: 100%; gap: 12px; }
-.vertical-track { position: relative; flex: 1; overflow: hidden; border-radius: 11px 11px 5px 5px; background: repeating-linear-gradient(to top, #f1f2f4 0 1px, transparent 1px 25%); }
-.vertical-track i { position: absolute; right: 0; bottom: 0; left: 0; border-radius: 9px 9px 4px 4px; background: linear-gradient(180deg, #7d6cf0, #5646d7); }
-.plan-row:nth-child(2) .vertical-track i { background: linear-gradient(180deg, #353a41, #1d2024); }
-.plan-row:nth-child(3) .vertical-track i { background: linear-gradient(180deg, #d8ff72, #a9d83f); }
-.plan-value span, .plan-value strong, .plan-value small { display: block; }
-.plan-value span { color: #858b94; font-size: 8px; font-weight: 850; text-transform: uppercase; letter-spacing: .08em; }
-.plan-value strong { margin-top: 4px; color: #373c43; font-size: 10px; }
-.plan-value small { margin-top: 3px; color: #a3a8b0; font-size: 7.5px; }
-.customer-panel { min-width: 0; }
-.driver-list { display: grid; padding: 14px 20px 5px; }
-.driver-list > div { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f1f3; }
-.driver-list > div:last-child { border-bottom: 0; }
-.driver-rank { color: #b0b4bb; font-size: 8px; font-weight: 900; }
-.driver-list strong, .driver-list small { display: block; }
-.driver-list strong { color: #383d44; font-size: 10px; }
-.driver-list small { margin-top: 3px; color: #9ba0a8; font-size: 8px; }
-.driver-count { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 9px; color: #5143ca; background: var(--rx-primary-soft); font-size: 9px; font-weight: 900; }
-.insight-box { display: grid; grid-template-columns: auto 1fr; gap: 10px; margin: 10px 15px 15px; padding: 13px; border: 1px solid #e8e5ff; border-radius: 13px; background: #f8f7ff; }
-.insight-box > span { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; color: #fff; background: var(--rx-primary); font-size: 11px; }
-.insight-box p { margin: 0; color: #747a85; font-size: 8.5px; line-height: 1.55; }
-.insight-box strong { display: block; margin-bottom: 3px; color: #4e43b0; }
-@media (max-width: 1180px) { .metric-grid { grid-template-columns: 1fr 1fr; } .briefing-grid { grid-template-columns: 1fr; } .focus-card { min-height: 0; } }
-@media (max-width: 1000px) { .briefing-card { grid-template-columns: 1fr; } .analytics-grid, .bottom-grid { grid-template-columns: 1fr; } }
-@media (max-width: 700px) { .overview-page { padding: 17px 14px 30px; } .metric-grid { grid-template-columns: 1fr; } .briefing-card { padding: 22px 18px; } .signal-foot { grid-template-columns: 1fr 1fr 1fr; } .risk-overview { grid-template-columns: 1fr; } .plan-bars { height: 200px; padding-inline: 16px; } }
+.risk-line.high .bar-track i { background: #e45768; }.risk-line.medium .bar-track i { background: #e9a23b; }.risk-line.low .bar-track i { background: #16b8a6; }
+.risk-line small { color: #7a86a6; font-size: 13px; }
+.plan-exposure { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 0 30px 30px; }
+.plan-exposure > div { padding: 18px; border: 1px solid #dfe4f0; border-radius: 17px; background: #f4f6fb; }
+.plan-exposure span, .plan-exposure strong, .plan-exposure small { display: block; }
+.plan-exposure > div > span { color: #69769a; font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .08em; }
+.plan-exposure strong { margin-top: 8px; color: #27305f; font-size: 19px; }
+.plan-exposure > div > div { height: 8px; margin: 13px 0 9px; overflow: hidden; border-radius: 99px; background: #e2e6f1; }
+.plan-exposure > div > div i { display: block; height: 100%; border-radius: inherit; background: #0f8f82; }
+.plan-exposure small { color: #7a86a6; font-size: 12px; }
+.priority-panel { padding: 0 28px 28px; color: #fff; background: #1f2753; border-color: #1f2753; }
+.priority-panel .panel-heading { padding-inline: 0; }
+.priority-panel .panel-heading h3 { color: #fff; }
+.priority-pill { padding: 9px 11px; border-radius: 999px; color: #1f2753; background: #39d0c2; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; }
+.priority-customer { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; width: 100%; margin-top: 26px; padding: 16px; border: 1px solid rgba(255,255,255,.16); border-radius: 18px; color: #fff; background: rgba(255,255,255,.08); text-align: left; cursor: pointer; }
+.focus-avatar { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 15px; color: #1f2753; background: #dff7f3; font-size: 14px; font-weight: 900; }
+.priority-customer strong, .priority-customer small { display: block; }
+.priority-customer strong { font-size: 17px; }.priority-customer small { margin-top: 5px; color: #c3cee1; font-size: 13px; }
+.priority-customer b { padding: 9px 10px; border-radius: 11px; color: #fff; background: #d94456; font-size: 15px; }
+.action-copy { margin-top: 25px; }
+.action-copy > span { color: #b3c3d8; font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .09em; }
+.action-copy h4 { margin: 10px 0 0; color: #fff; font-size: 24px; line-height: 1.25; letter-spacing: -.035em; }
+.action-copy p { margin: 12px 0 0; color: #cad5e7; font-size: 15px; line-height: 1.65; }
+.action-value-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 22px; }
+.action-value-grid div { padding: 15px; border: 1px solid rgba(255,255,255,.13); border-radius: 15px; background: rgba(255,255,255,.06); }
+.action-value-grid span, .action-value-grid strong { display: block; }
+.action-value-grid span { color: #b3c3d8; font-size: 12px; line-height: 1.4; }.action-value-grid strong { margin-top: 7px; color: #fff; font-size: 16px; }
+.priority-cta { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 54px; margin-top: 22px; padding: 0 17px; border: 0; border-radius: 15px; color: #1f2753; background: #39d0c2; font-size: 15px; font-weight: 850; cursor: pointer; }
+.table-heading { padding-bottom: 24px; }
+.table-heading button { min-height: 46px; padding: 0 15px; border: 1px solid #c8d4e7; border-radius: 13px; color: #5b5bd6; background: #eef1ff; font-size: 14px; font-weight: 800; cursor: pointer; }
+.overview-note { margin: 2px 0 0; color: #69769a; font-size: 13px; text-align: center; }
+@media (max-width: 1300px) {
+  .portfolio-hero { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  .decision-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .overview-page { gap: 18px; padding: 24px 16px 42px; }
+  .portfolio-hero { min-height: 0; padding: 28px 22px; border-radius: 24px; }
+  .hero-copy h2 { font-size: 40px; }
+  .hero-copy p { font-size: 16px; }
+  .recovery-meta, .metric-grid, .action-value-grid { grid-template-columns: 1fr; }
+  .health-body { grid-template-columns: 1fr; gap: 26px; padding: 26px 22px; }
+  .plan-exposure { grid-template-columns: 1fr; padding: 0 22px 22px; }
+  .panel-heading { padding: 24px 22px 0; }
+  .panel-heading h3 { font-size: 24px; }
+}
 </style>
