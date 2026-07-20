@@ -2,11 +2,17 @@
 import HealthRing from './HealthRing.vue'
 import RiskBadge from './RiskBadge.vue'
 import type { Customer, Recommendation } from '@/types/customer'
+import type { ActionStatus } from '@/types/action'
 
-const props = defineProps<{ customer: Customer; recommendation: Recommendation }>()
-defineEmits<{ close: [] }>()
+const props = defineProps<{ customer: Customer; recommendation: Recommendation; actionStatus: ActionStatus }>()
+const emit = defineEmits<{ close: []; openScenario: [customerId: number]; updateStatus: [customerId: number, status: ActionStatus] }>()
+const statusOptions: ActionStatus[] = ['Not started', 'Planned', 'In progress', 'Completed']
 
 const formatMoney = (amount: number) => `RM ${amount.toLocaleString('en-MY')}`
+
+function onStatusChange(event: Event) {
+  emit('updateStatus', props.customer.id, (event.target as HTMLSelectElement).value as ActionStatus)
+}
 </script>
 
 <template>
@@ -58,6 +64,10 @@ const formatMoney = (amount: number) => `RM ${amount.toLocaleString('en-MY')}`
             <div><span>Target timeframe</span><strong>{{ recommendation.timeframe }}</strong></div>
             <div><span>Estimated risk reduction</span><strong>-{{ recommendation.estimatedRiskReduction }} pts</strong></div>
             <div><span>Potential annual revenue protected</span><strong>{{ formatMoney(recommendation.potentialRevenueProtected) }}</strong></div>
+          </div>
+          <div class="recommendation-actions">
+            <label><span>Action status</span><select :value="actionStatus" @change="onStatusChange"><option v-for="status in statusOptions" :key="status">{{ status }}</option></select></label>
+            <button type="button" @click="emit('openScenario', customer.id)">Compare what-if scenarios</button>
           </div>
         </section>
 
@@ -113,6 +123,11 @@ h2 { margin-bottom: 3px; color: #171c2d; font-size: 19px; letter-spacing: -.025e
 .recommendation-metrics { display: grid; grid-template-columns: 1fr 1fr 1.35fr; gap: 8px; }
 .recommendation-metrics > div { padding: 11px; border: 1px solid #e7e3ff; border-radius: 11px; background: rgba(255,255,255,.75); }
 .recommendation-metrics strong { font-size: 12px; }
+.recommendation-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e7e3ff; }
+.recommendation-actions label { display: flex; align-items: center; gap: 8px; }
+.recommendation-actions label span { color: #969cad; font-size: 9px; text-transform: uppercase; }
+.recommendation-actions select { padding: 8px 10px; border: 1px solid #dedaf7; border-radius: 9px; color: #4f566b; background: #fff; font-size: 10px; font-weight: 700; }
+.recommendation-actions button { padding: 9px 12px; border: 0; border-radius: 9px; color: #fff; background: #6f56df; font-size: 10px; font-weight: 800; cursor: pointer; }
 .method-note { margin: 0; padding: 0 4px; color: #969caf; font-size: 10px; line-height: 1.5; }
-@media (max-width: 620px) { .drawer-content { padding: 17px 15px 28px; } .drawer > header { padding: 17px 15px; } .metric-grid { grid-template-columns: 1fr 1fr; } .risk-summary { align-items: flex-start; } .recommendation-metrics { grid-template-columns: 1fr; } .reason-category { display: none; } }
+@media (max-width: 620px) { .recommendation-actions { align-items: stretch; flex-direction: column; } .recommendation-actions label { justify-content: space-between; } .recommendation-actions button { width: 100%; } .drawer-content { padding: 17px 15px 28px; } .drawer > header { padding: 17px 15px; } .metric-grid { grid-template-columns: 1fr 1fr; } .risk-summary { align-items: flex-start; } .recommendation-metrics { grid-template-columns: 1fr; } .reason-category { display: none; } }
 </style>

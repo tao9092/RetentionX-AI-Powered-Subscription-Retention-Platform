@@ -1,29 +1,25 @@
 <script setup lang="ts">
 import type { ViewId } from '@/types/navigation'
 
-const props = defineProps<{ activeView: ViewId; mobileOpen: boolean; mobileOrPc: boolean }>()
+defineProps<{ activeView: ViewId; mobileOpen: boolean }>()
 const emit = defineEmits<{ navigate: [view: ViewId]; close: [] }>()
 
 const navItems: Array<{ id: ViewId; label: string; helper: string; icon: string }> = [
   { id: 'overview', label: 'Overview', helper: 'Revenue command centre', icon: 'dashboard' },
   { id: 'customers', label: 'Customers', helper: 'Health and churn risk', icon: 'customers' },
-  { id: 'recommendations', label: 'Actions', helper: 'Retention playbook', icon: 'actions' },
+  { id: 'recommendations', label: 'Actions', helper: 'Retention work queue', icon: 'actions' },
+  { id: 'scenarios', label: 'Scenario Lab', helper: 'Compare interventions', icon: 'scenarios' },
 ]
 
 function navigate(id: ViewId) {
   emit('navigate', id)
-  if (props.mobileOrPc === false) {
-    emit('close')
-  }
+  emit('close')
 }
 </script>
 
 <template>
   <div v-if="mobileOpen" class="nav-overlay" @click="emit('close')"></div>
-  <transition name="slide">
-  
- 
-  <aside v-if="mobileOpen" class="sidebar" >
+  <aside class="sidebar" :class="{ open: mobileOpen }">
     <div class="brand">
       <div class="brand-mark">RX</div>
       <div><strong>RetentionX</strong><span>Retention Intelligence</span></div>
@@ -42,37 +38,37 @@ function navigate(id: ViewId) {
         <span class="nav-icon">
           <svg v-if="item.icon === 'dashboard'" viewBox="0 0 24 24"><path d="M4 13h6V4H4v9Zm0 7h6v-4H4v4Zm10 0h6v-9h-6v9Zm0-16v4h6V4h-6Z"/></svg>
           <svg v-else-if="item.icon === 'customers'" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <svg v-else viewBox="0 0 24 24"><path d="m9 18 6-6-6-6M4 4v16M20 4v16"/></svg>
+          <svg v-else-if="item.icon === 'actions'" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <svg v-else viewBox="0 0 24 24"><path d="M4 19V8M10 19V4M16 19v-7M22 19H2M3 7l7-4 6 7 6-5"/></svg>
         </span>
         <span><strong>{{ item.label }}</strong><small>{{ item.helper }}</small></span>
       </button>
     </nav>
 
     <div class="side-insight">
-      <span class="insight-kicker">Preliminary MVP</span>
-      <strong>Explain. Prioritise. Retain.</strong>
-      <p>Prototype scoring uses transparent customer signals and simulated SaaS data.</p>
+      <span class="insight-kicker">Preliminary MVP v2</span>
+      <strong>Predict. Explain. Act.</strong>
+      <p>Transparent risk scoring, persistent action tracking and scenario-based decision support.</p>
     </div>
 
     <div class="side-footer">
       <span class="status-dot"></span>
-      <span><strong>Model online</strong><small>Demo dataset connected</small></span>
+      <span><strong>Decision engine online</strong><small>Demo portfolio connected</small></span>
     </div>
   </aside>
-   </transition>
 </template>
 
 <style scoped>
-.sidebar { position: relative; z-index: 30; display: flex; flex-direction: column; width: 268px; min-width: 268px; min-height: 100vh; padding: 22px 17px; color: #dfe4f7; background: radial-gradient(circle at 20% 0%, #202753 0, transparent 34%), #0b1020; box-sizing: border-box;}
+.sidebar { position: relative; z-index: 30; display: flex; flex-direction: column; width: 268px; min-width: 268px; min-height: 100vh; padding: 22px 17px; color: #dfe4f7; background: radial-gradient(circle at 20% 0%, #202753 0, transparent 34%), #0b1020; box-sizing: border-box; }
 .brand { position: relative; display: flex; align-items: center; gap: 12px; padding: 3px 7px 27px; }
 .brand-mark { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; color: #fff; background: linear-gradient(135deg, #7a5cff, #22bce9); box-shadow: 0 10px 24px rgba(80, 92, 232, .35); font-size: 13px; font-weight: 900; letter-spacing: -.03em; }
 .brand strong, .brand span { display: block; }
 .brand strong { color: #fff; font-size: 16px; letter-spacing: -.02em; }
 .brand span { margin-top: 3px; color: #7f8aa8; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
-.close-nav {  margin-left: auto; border: 0; color: #cfd6eb; background: transparent; font-size: 27px; cursor: pointer; }
+.close-nav { display: none; margin-left: auto; border: 0; color: #cfd6eb; background: transparent; font-size: 27px; cursor: pointer; }
 .workspace-label { padding: 0 12px 9px; color: #606c8a; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; }
 nav { display: grid; gap: 7px; }
-nav button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 12px; border: 1px solid transparent; border-radius: 13px; color: #98a3bf; background: transparent; text-align: left; cursor: pointer; transition: .18s ease; }
+nav button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border: 1px solid transparent; border-radius: 13px; color: #98a3bf; background: transparent; text-align: left; cursor: pointer; transition: .18s ease; }
 nav button:hover { color: #e4e8f6; background: rgba(255, 255, 255, .045); }
 nav button.active { color: #fff; border-color: rgba(137, 118, 255, .25); background: linear-gradient(90deg, rgba(113, 86, 245, .22), rgba(69, 108, 222, .08)); }
 .nav-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: rgba(255, 255, 255, .04); }
@@ -93,15 +89,9 @@ nav button.active span:last-child small { color: #8f9ab7; }
 .side-footer small { margin-top: 2px; color: #65708d; font-size: 9px; }
 .nav-overlay { display: none; }
 @media (max-width: 900px) {
-  .sidebar { position: fixed; inset: 0 auto 0 0; box-shadow: 20px 0 50px rgba(0,0,0,.25); }
-  .slide-enter-active, .slide-leave-active { transition: transform .22s ease; }
-  .slide-enter-from, .slide-leave-to { transform: translateX(-102%); }
-  .slide-enter-to, .slide-leave-from { transform: translateX(0);}
+  .sidebar { position: fixed; inset: 0 auto 0 0; transform: translateX(-102%); box-shadow: 20px 0 50px rgba(0,0,0,.25); transition: transform .22s ease; }
+  .sidebar.open { transform: translateX(0); }
   .close-nav { display: block; }
   .nav-overlay { position: fixed; z-index: 29; inset: 0; display: block; background: rgba(9, 13, 28, .5); backdrop-filter: blur(4px); }
 }
-.slide-enter-active, .slide-leave-active { transition: transform .22s ease; }
-  .slide-enter-from, .slide-leave-to { transform: translateX(-102%); }
-  .slide-enter-to, .slide-leave-from { transform: translateX(0);}
-
 </style>

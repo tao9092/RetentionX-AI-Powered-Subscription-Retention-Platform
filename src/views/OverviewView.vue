@@ -3,15 +3,18 @@ import { computed } from 'vue'
 import CustomerTable from '@/components/CustomerTable.vue'
 import MetricCard from '@/components/MetricCard.vue'
 import type { Customer, Recommendation, Plan } from '@/types/customer'
+import type { ActionStatusMap } from '@/types/action'
 
-const props = defineProps<{ customers: Customer[]; recommendations: Recommendation[] }>()
-const emit = defineEmits<{ openCustomer: [customerId: number]; viewCustomers: []; viewActions: [] }>()
+const props = defineProps<{ customers: Customer[]; recommendations: Recommendation[]; actionStatuses: ActionStatusMap }>()
+const emit = defineEmits<{ openCustomer: [customerId: number]; viewCustomers: []; viewActions: []; viewScenarios: [] }>()
 
 const formatMoney = (amount: number) => `RM ${Math.round(amount).toLocaleString('en-MY')}`
 const highRiskCustomers = computed(() => props.customers.filter((c) => c.riskLevel === 'High').sort((a, b) => b.churnProbability - a.churnProbability))
 const underUtilized = computed(() => props.customers.filter((c) => c.underUtilized))
 const monthlyRevenueAtRisk = computed(() => props.customers.reduce((sum, customer) => sum + customer.monthlyRevenueAtRisk, 0))
 const recoverableRevenue = computed(() => props.recommendations.reduce((sum, item) => sum + item.potentialRevenueProtected, 0))
+const activeActions = computed(() => Object.values(props.actionStatuses).filter((status) => status === 'Planned' || status === 'In progress').length)
+const completedActions = computed(() => Object.values(props.actionStatuses).filter((status) => status === 'Completed').length)
 
 const riskDistribution = computed(() => {
   const total = props.customers.length
@@ -50,13 +53,15 @@ const riskDrivers = computed(() => {
         <p>RetentionX converts customer usage, support, payment and renewal signals into a prioritised retention plan.</p>
         <div class="hero-actions">
           <button class="primary-button" type="button" @click="emit('viewActions')">Review priority actions</button>
-          <button class="secondary-button" type="button" @click="emit('viewCustomers')">Explore customers</button>
+          <button class="secondary-button" type="button" @click="emit('viewScenarios')">Open Scenario Lab</button>
+          <button class="text-button" type="button" @click="emit('viewCustomers')">Explore customers →</button>
         </div>
       </div>
       <div class="impact-card">
         <span>Estimated annual revenue recoverable</span>
         <strong>{{ formatMoney(recoverableRevenue) }}</strong>
         <p>Based on transparent scenario estimates across the current demo portfolio.</p>
+        <div class="action-pulse"><span><i></i>{{ activeActions }} active actions</span><span>{{ completedActions }} completed</span></div>
         <div class="impact-progress"><i :style="{ width: `${Math.min(78, Math.round((recoverableRevenue / Math.max(monthlyRevenueAtRisk * 12, 1)) * 100))}%` }"></i></div>
       </div>
     </section>
@@ -125,7 +130,7 @@ const riskDrivers = computed(() => {
 .hero-panel h2 { margin: 8px 0 9px; font-size: clamp(25px, 3vw, 36px); line-height: 1.08; letter-spacing: -.045em; }
 .hero-panel > div:first-child > p { max-width: 640px; margin: 0; color: #aab3d0; font-size: 12px; line-height: 1.6; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
-.primary-button, .secondary-button { padding: 10px 14px; border-radius: 10px; font-size: 11px; font-weight: 750; cursor: pointer; }
+.primary-button, .secondary-button, .text-button { padding: 10px 14px; border-radius: 10px; font-size: 11px; font-weight: 750; cursor: pointer; }
 .primary-button { border: 0; color: #fff; background: linear-gradient(135deg, #7659ef, #3d8bea); box-shadow: 0 10px 20px rgba(68, 85, 222, .25); }
 .secondary-button { border: 1px solid rgba(255,255,255,.15); color: #d9def0; background: rgba(255,255,255,.06); }
 .impact-card { position: relative; z-index: 1; padding: 19px; border: 1px solid rgba(255,255,255,.13); border-radius: 17px; background: rgba(255,255,255,.07); backdrop-filter: blur(8px); }
@@ -178,6 +183,11 @@ const riskDrivers = computed(() => {
 .insight-box > span { color: #7259e7; }
 .insight-box p { margin: 0; color: #747b8d; font-size: 9px; line-height: 1.55; }
 .insight-box strong { color: #4a405f; }
+.text-button { border: 0; color: #b6aaff; background: transparent; }
+.text-button:hover { color: #fff; }
+.action-pulse { display: flex; justify-content: space-between; gap: 12px; margin-top: 11px; color: #a8b0ca; font-size: 9px; }
+.action-pulse span:first-child { display: inline-flex; align-items: center; gap: 6px; }
+.action-pulse i { width: 7px; height: 7px; border-radius: 50%; background: #23b184; box-shadow: 0 0 0 4px rgba(35,177,132,.12); }
 @media (max-width: 1180px) { .metric-grid { grid-template-columns: 1fr 1fr; } .bottom-grid { grid-template-columns: 1fr; } }
 @media (max-width: 930px) { .hero-panel, .analytics-grid { grid-template-columns: 1fr; } .impact-card { max-width: 430px; } }
 @media (max-width: 620px) { .overview-page { padding: 17px 14px 28px; } .hero-panel { padding: 23px 20px; } .metric-grid { grid-template-columns: 1fr; } .risk-overview { grid-template-columns: 1fr; justify-items: center; } .risk-bars { width: 100%; } }
