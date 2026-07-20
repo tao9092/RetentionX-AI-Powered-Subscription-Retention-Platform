@@ -1,1 +1,1 @@
-export type ViewId = 'overview' | 'customers' | 'recommendations' | 'scenarios'
+export type ViewId = 'overview' | 'customers' | 'insights' | 'recommendations' | 'scenarios' | 'data'

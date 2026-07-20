@@ -1,24 +1,26 @@
-# RetentionX Preliminary MVP v2
+# RetentionX Preliminary v5 — Comfort UI
 
-## Added
+## Major redesign
 
-- Scenario Lab for comparing retention interventions.
-- Projected risk, intervention cost, revenue protected, net benefit and directional ROI.
-- Persistent action statuses using browser localStorage.
-- Four-stage workflow: Not started, Planned, In progress and Completed.
-- Action priority and status filters.
-- Direct navigation from Customer 360 and action cards to Scenario Lab.
-- Customer sorting by risk priority, revenue at risk and renewal date.
-- CSV export for the filtered customer portfolio.
-- GitHub Actions build workflow.
+- Raised the application baseline from 8–10px interface text to a readable 12–16px system.
+- Rebuilt the sidebar as a bright, accessible workspace with 58px navigation targets.
+- Enlarged the top bar, page titles, descriptions and primary actions.
+- Increased card padding, panel spacing and dashboard breathing room.
+- Enlarged KPI values and supporting explanations.
+- Rebuilt tables with 14px content, 44px avatars, larger badges and 38px row actions.
+- Enlarged filters and form controls to at least 44px high.
+- Enlarged Customer 360 to a 620px drawer and improved content hierarchy.
+- Improved Scenario Lab, Actions, Insights and Data Studio readability.
+- Improved desktop, tablet and mobile layouts.
 
-## Improved
+## Product functions retained
 
-- Overview now shows active and completed action counts.
-- Customer 360 now supports status updates and scenario comparison.
-- Retention Actions is now an operational work queue instead of a temporary visual list.
-- README and demo flow now match the implemented product.
-
-## Model disclaimer
-
-All customer data and intervention impacts are simulated. Scenario results are directional decision-support estimates and must not be presented as validated causal predictions.
+- Churn risk and customer health scoring
+- Explainable risk reasons
+- Next-best-action recommendations
+- Revenue-at-risk and revenue-protection estimates
+- Retention work queue with persistent status
+- Scenario comparison lab
+- Strategic insights
+- CSV validation and portfolio import
+- Global search and Customer 360

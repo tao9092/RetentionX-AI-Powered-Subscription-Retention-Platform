@@ -1,20 +1,40 @@
 # RetentionX
 
+**Preliminary UI v5 — Comfort-First Decision Workspace**
+
 **AI-Powered Subscription Retention Platform**
 
 RetentionX helps subscription businesses identify customers at risk of churn, explain the signals behind that risk, prioritise the right intervention and estimate the subscription revenue that could be protected.
+
+
+## UI and experience
+
+The v5 interface is designed as an action-oriented customer-success workspace rather than a generic analytics dashboard. It includes:
+
+- grouped navigation for monitoring, acting, and data management;
+- a global `Ctrl K` command palette for customer search and page navigation;
+- a concise portfolio briefing with a single “Today’s focus” account;
+- semantic risk colours and consistent action hierarchy;
+- keyboard-accessible customer rows and visible focus states;
+- responsive customer cards on mobile;
+- toast feedback for workflow and dataset changes; and
+- an AI-readable `DESIGN.md` covering tokens, components, motion, and responsive behaviour.
+
+The visual system is original and uses a charcoal shell, off-white canvas, violet analysis accents, and lime primary actions.
 
 ## Preliminary-round objective
 
 The prototype demonstrates a complete decision workflow:
 
-1. Detect high-risk and under-utilised subscription accounts.
-2. Calculate an explainable customer health score and churn probability.
-3. Show the strongest risk signals for each account.
-4. Recommend a next-best retention action and response timeframe.
-5. Track action progress from **Not started** to **Completed**.
-6. Compare intervention scenarios by projected risk, cost, revenue protected and net benefit.
-7. Export the filtered customer-risk portfolio as CSV.
+1. Import and validate a customer portfolio from CSV, or use the curated demo dataset.
+2. Detect high-risk and under-utilised subscription accounts.
+3. Calculate an explainable customer health score and churn probability.
+4. Show the strongest risk signals for each account.
+5. Segment the portfolio by churn risk and customer value.
+6. Recommend a next-best retention action and response timeframe.
+7. Track action progress from **Not started** to **Completed**.
+8. Compare intervention scenarios by projected risk, cost, revenue protected and net benefit.
+9. Export customer data or print a management-level insight report.
 
 ## Main screens
 
@@ -29,6 +49,10 @@ Searchable and filterable customer portfolio with sorting by risk priority, reve
 ### Customer 360
 
 Health score, churn probability, risk evidence, subscription utilisation, next-best action and action status.
+
+### Strategic Insights
+
+Risk-value segmentation, industry hotspots, common risk drivers, high-risk action coverage and renewal exposure windows. The page includes a print-friendly executive report mode.
 
 ### Retention Actions
 
@@ -47,6 +71,19 @@ A what-if comparison of:
 
 Each eligible scenario shows projected churn risk, intervention cost, annual revenue protected, net benefit and directional ROI.
 
+### Customer Data Studio
+
+CSV ingestion with:
+
+- downloadable template;
+- required-column validation;
+- numeric and range checks;
+- invalid-row reporting;
+- scored-record preview;
+- browser-only dataset persistence;
+- active-portfolio export; and
+- one-click restoration of the hackathon demo dataset.
+
 ## Prototype model
 
 The preliminary demo uses a transparent rule-based scoring model based on:
@@ -61,6 +98,19 @@ The preliminary demo uses a transparent rule-based scoring model based on:
 
 The scenario model is intentionally labelled as a **directional estimate**, not a causal guarantee. In production, the churn and intervention layers should be validated using historical outcomes or controlled experiments.
 
+## CSV schema
+
+Required columns:
+
+```text
+companyName, industry, plan, monthlyRevenue, licensedSeats,
+activeSeats, logins30d, previousLogins30d, featureUsagePct,
+unresolvedTickets, latePayments90d, satisfactionScore,
+daysUntilRenewal
+```
+
+`id` is optional. Valid plans are `Basic`, `Pro`, and `Enterprise`.
+
 ## Technology
 
 - Vue 3
@@ -68,7 +118,7 @@ The scenario model is intentionally labelled as a **directional estimate**, not 
 - Vite
 - CSS/SVG visualisations with no chart-library dependency
 - Simulated B2B SaaS subscription dataset
-- Browser `localStorage` for prototype action tracking
+- Browser `localStorage` for prototype data and action tracking
 - GitHub Actions build check
 
 ## Run locally
@@ -90,12 +140,12 @@ npm run preview
 ## Recommended demo flow
 
 1. Open **Executive Overview** and explain monthly revenue at risk.
-2. Select a high-risk account such as **CloudNine Commerce**.
-3. Show the churn probability and explainable risk signals.
-4. Set its action status to **Planned**.
-5. Open **Scenario Lab** and compare the available interventions.
-6. Choose the best-value scenario and add it to the action queue.
-7. Return to **Retention Actions** to show the persistent workflow.
+2. Open **Strategic Insights** and show the risk-value matrix and renewal exposure.
+3. Select a high-value, high-risk account such as **CloudNine Commerce**.
+4. Show the churn probability and explainable risk signals.
+5. Open **Scenario Lab**, compare interventions and add the best-value option to the queue.
+6. Return to **Retention Actions** and update its execution status.
+7. End at **Data Studio** to show that the same workflow accepts a validated customer CSV rather than only fixed demo records.
 
 ## Repository update
 
@@ -108,4 +158,4 @@ To replace an earlier version while keeping Git history:
 
 ## Data disclaimer
 
-The included dataset and intervention estimates are simulated for concept validation. A production implementation should integrate CRM, product-usage, support, payment and feedback systems, then validate churn and intervention models with historical outcomes.
+The included dataset and intervention estimates are simulated for concept validation. Imported CSV files remain in the browser and are not sent to an external service. A production implementation should integrate CRM, product-usage, support, payment and feedback systems, then validate churn and intervention models with historical outcomes.
