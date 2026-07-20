@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref,watchEffect, watch } from 'vue'
 import Sidebar from '@/components/Sidebar.vue'
 import type { ViewId } from '@/types/navigation'
 import type { ActionStatus, ActionStatusMap } from '@/types/action'
@@ -13,10 +13,19 @@ import { customers } from '@/data/customers'
 import { generateRecommendation } from '@/utils/recommendationEngine'
 
 const STORAGE_KEY = 'retentionx-action-statuses-v2'
+import { useResponsive } from '@/utils/mobileOrPc'
+
+const { isDesktop } = useResponsive()
+const mobileOrPc = ref(isDesktop.value ? true : false)
 const activeView = ref<ViewId>('overview')
 const selectedCustomerId = ref<number | null>(null)
 const scenarioCustomerId = ref<number | null>(null)
-const mobileNavOpen = ref(false)
+const mobileNavOpen = ref(true)
+
+watchEffect(() => {
+  mobileNavOpen.value = isDesktop.value
+  mobileOrPc.value = isDesktop.value ? true : false
+})
 const recommendations = customers.map(generateRecommendation)
 
 function loadActionStatuses(): ActionStatusMap {
@@ -70,9 +79,9 @@ function addToActionQueue(customerId: number) {
 
 <template>
   <div class="app-shell">
-    <Sidebar :active-view="activeView" :mobile-open="mobileNavOpen" @navigate="navigate" @close="mobileNavOpen = false" />
+    <Sidebar :active-view="activeView" :mobile-or-pc="mobileOrPc" :mobile-open="mobileNavOpen" @navigate="navigate" @close="mobileNavOpen = false" />
     <main class="main-area">
-      <TopBar :title="pageMeta.title" :subtitle="pageMeta.subtitle" @toggle-nav="mobileNavOpen = true" />
+      <TopBar :title="pageMeta.title" :mobile-nav-open="mobileNavOpen" :subtitle="pageMeta.subtitle" @toggle-nav="mobileNavOpen = true" />
       <OverviewView
         v-if="activeView === 'overview'"
         :customers="customers"
@@ -128,7 +137,7 @@ body { min-width: 320px; min-height: 100vh; margin: 0; background: #f5f6fa; }
 button, input, select { font: inherit; }
 button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid rgba(112, 86, 223, .25); outline-offset: 2px; }
 .app-shell { display: flex; min-height: 100vh; }
-.main-area { min-width: 0; flex: 1; min-height: 100vh; background: linear-gradient(180deg, #f7f8fc, #f4f5f9); }
+.main-area { min-width: 0; flex: 1; min-height: 100vh; background: linear-gradient(180deg, #f7f8fc, #f4f5f9);}
 ::selection { color: #fff; background: #6d55dd; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { border: 3px solid transparent; border-radius: 99px; background: #c9cdd9; background-clip: padding-box; }
