@@ -25,6 +25,16 @@ export interface RiskReason {
   category: 'Engagement' | 'Adoption' | 'Support' | 'Payment' | 'Satisfaction' | 'Renewal'
 }
 
+export interface RiskContribution {
+  id: string
+  category: RiskReason['category'] | 'Account'
+  label: string
+  points: number
+  observedValue: string
+  explanation: string
+  source: 'Usage' | 'Billing' | 'Support' | 'Feedback' | 'Account'
+}
+
 export interface Customer extends CustomerInput {
   usageDeclinePct: number
   seatUtilizationPct: number
@@ -35,6 +45,7 @@ export interface Customer extends CustomerInput {
   monthlyRevenueAtRisk: number
   annualRevenueAtRisk: number
   riskReasons: RiskReason[]
+  riskContributions: RiskContribution[]
 }
 
 export interface Recommendation {

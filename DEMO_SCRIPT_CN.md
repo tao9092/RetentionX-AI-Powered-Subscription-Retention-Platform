@@ -1,56 +1,27 @@
-# RetentionX Preliminary Demo Script
+# RetentionX Preliminary v1.0 演示流程
 
-## 0:00–0:30 问题
+## 0:00–0:40 产品定位
 
-订阅公司通常在客户取消后才发现问题。RetentionX 会结合使用量、功能采用率、客服、付款和续约资料，提前发现高风险客户。
+RetentionX 帮助订阅业务在客户取消前识别风险、解释风险来源、安排挽留行动并记录真实结果。演示数据与历史结果均明确标注为合成黑客松数据。
 
-## 0:30–1:10 Overview
+## 0:40–1:30 Overview
 
-展示四个核心指标：
+展示客户数量、高风险客户、年度风险收入和可保护 ARR。解释三个收入指标口径不同：风险暴露、符合条件的潜在保护金额、以及只来自成功已记录结果的实际节省 ARR。
 
-- Total customers
-- High-risk customers
-- Under-utilised accounts
-- Revenue at risk
+## 1:30–2:30 Customer 360
 
-然后指出 Recoverable Annual Revenue 和 Today’s Priority，让评审看到系统不只是提供数据，而是在指导公司先处理谁。
+打开高风险客户，查看使用、账单、客服、反馈和账户信号。强调风险分数是透明启发式原型指标，不是经过校准的机器学习概率。
 
-## 1:10–2:05 Customer 360
+## 2:30–3:40 Action Center
 
-打开一个高风险客户。
+从推荐创建行动，填写负责人、截止日期、状态、客户回应、结果、行动后风险、实际保护收入和备注。说明“已完成”只代表工作流结束，不代表客户已留存。
 
-说明：
+切换 Outcomes，展示留存、降级、流失、未知结果、成功率、完成时间及行动类型结果。新增行动默认保持待定。
 
-- Health Score
-- Churn Probability
-- Revenue at Risk
-- Feature Usage
-- Seat Utilisation
-- Days to Renewal
+## 3:40–4:20 Scenario Lab
 
-展示 Explainable Risk，说明系统为什么判断客户可能离开。
+比较方向性方案。指出卡片上的 “Prototype rule”、“Not causally validated” 和 “Directional estimate only”，不把估算描述为保证结果。
 
-## 2:05–2:45 Next Best Action
+## 4:20–5:00 Model Transparency
 
-展示系统建议，例如解决工单、提供 onboarding 或调整套餐。
-
-强调：系统同时给出 Priority、Target Timeframe、Estimated Risk Reduction 和 Potential Revenue Protected。
-
-## 2:45–3:20 Scenario Lab
-
-进入 Scenario Lab，对比不同挽留方案的成本、预测风险和收入影响。
-
-说明这些数字目前是 Directional Estimation，而不是未经验证的因果结果。
-
-## 3:20–3:50 Action Queue
-
-将方案加入 Action Queue，并更新为 Planned 或 In Progress，说明 Customer Success 团队可以直接执行和追踪。
-
-## 3:50–4:00 总结
-
-RetentionX 帮助公司回答四个问题：
-
-1. 谁可能离开？
-2. 为什么可能离开？
-3. 应该采取什么行动？
-4. 可以保护多少订阅收入？
+在 More tools 打开 Model Transparency，选择客户，核对每个信号的数据来源、贡献分和最终总分，并说明已知限制与未来训练模型架构。

@@ -1,89 +1,45 @@
-# RetentionX
+# RetentionX Preliminary v1.0
 
-**AI-Powered Subscription Retention Platform**
+RetentionX is a browser-only Vue 3 and TypeScript prototype for subscription-retention decision support. It uses transparent heuristic risk scoring, specific next-best actions, scenario estimates, and an outcome-aware Action Center.
 
-RetentionX helps subscription businesses identify customers at risk of churn, understand the signals behind that risk, prioritise retention work, and estimate the recurring revenue that can be protected.
+## P0 capabilities
 
-## Preliminary build
+- Editorial white, black, soft-grey, peach and brown interface with serif headings
+- Responsive, collapsible and scrollable navigation, mobile drawer and command palette
+- Customer portfolio and Customer 360 with exact risk evidence
+- Action Center with owners, due dates, workflow status, customer response, outcome, risk change, realised saved ARR, notes and history
+- Outcomes that keep `Completed` separate from `Retained`
+- Annual Revenue at Risk, Potential Protectable ARR and Realised Saved ARR with distinct formulas
+- Model Transparency page describing the preliminary heuristic and every customer contribution
+- Browser persistence under scoped `retentionx-v1-*` keys
+- Combined CSV demo importer (five-source import is planned for P1)
 
-This repository contains the hackathon preliminary-round product prototype. It uses a curated customer portfolio and a transparent decision engine so the full product flow can be demonstrated without external services.
+The curated portfolio and three labelled historical outcomes are synthetic hackathon demonstration data. The risk score is not a calibrated production ML probability. Scenario results are directional prototype estimates and are not causally validated.
 
-### Core workflow
+## Setup
 
-1. Detect high-risk and under-utilised accounts.
-2. Calculate customer health and churn probability.
-3. Explain the strongest churn signals.
-4. Recommend the next best retention action.
-5. Compare intervention scenarios and expected revenue impact.
-6. Track actions from planning to completion.
-
-## Main features
-
-- Executive retention overview
-- Customer portfolio search and filters
-- Independent Customer 360 page
-- Explainable churn-risk signals
-- Customer health scoring
-- Revenue-at-risk calculations
-- Next-best-action recommendations
-- Retention action queue
-- Scenario comparison lab
-- Strategic portfolio insights
-- CSV import and validation studio
-- Collapsible desktop sidebar
-- Responsive layout for desktop, laptop and mobile
-- Local browser persistence for imported data and action status
-
-## UI direction
-
-Version 9 uses a light premium SaaS interface with:
-
-- Large, readable typography
-- Balanced information density
-- Purple-blue primary actions with teal accents
-- A collapsible desktop sidebar
-- A vertically scrollable sidebar navigation area
-- Secondary tools placed under **More tools**
-- A dedicated Customer 360 page instead of a crowded drawer
-- Reduced decorative status cards so navigation stays focused
-
-See [DESIGN.md](./DESIGN.md) for the full visual system.
-
-## Technology
-
-- Vue 3
-- TypeScript
-- Vite
-- CSS design system
-- Browser `localStorage`
-
-The preliminary prototype does not require a backend or external AI API.
-
-## Run locally
-
-Use Node.js 22.16 or newer.
+Requires Node.js 22.16 or newer.
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-Open the local URL shown by Vite, usually:
-
-```text
-http://localhost:5173
-```
-
-## Production build
+Validation:
 
 ```bash
+npm run type-check
+npm run test:run
 npm run build
 ```
 
-The generated production files are placed in `dist/`.
+## Architecture
 
-## Dataset
+- `src/App.vue`: navigation and safe local persistence
+- `src/styles/tokens.css`, `src/styles/base.css`: current design system
+- `src/utils/riskCalculator.ts`: deterministic heuristic contributions
+- `src/utils/actionManager.ts`: action lifecycle and outcome metrics
+- `src/utils/revenueMetrics.ts`: revenue definitions
+- `src/utils/recommendationEngine.ts`, `scenarioEngine.ts`, `csvParser.ts`: deterministic decision support
 
-The included dataset is synthetic and intended for concept validation. It models customer usage, seat utilisation, support tickets, payment behaviour, satisfaction, renewal timing and recurring revenue.
-
-For production use, the scoring model should be trained and validated against real historical churn and intervention outcomes.
+No backend, external integration, or AI API is required for demo mode.

@@ -3,18 +3,20 @@ import { computed } from 'vue'
 import CustomerTable from '@/components/CustomerTable.vue'
 import MetricCard from '@/components/MetricCard.vue'
 import type { Customer, Recommendation, Plan } from '@/types/customer'
-import type { ActionStatusMap } from '@/types/action'
+import type { RetentionAction } from '@/types/action'
+import { annualRevenueAtRisk as getAnnualRevenueAtRisk, potentialProtectableArr, realisedSavedArr } from '@/utils/revenueMetrics'
 
-const props = defineProps<{ customers: Customer[]; recommendations: Recommendation[]; actionStatuses: ActionStatusMap }>()
+const props = defineProps<{ customers: Customer[]; recommendations: Recommendation[]; actions: RetentionAction[] }>()
 const emit = defineEmits<{ openCustomer: [customerId: number]; viewCustomers: []; viewActions: []; viewScenarios: [] }>()
 
 const formatMoney = (amount: number) => `RM ${Math.round(amount).toLocaleString('en-MY')}`
 const highRiskCustomers = computed(() => props.customers.filter((c) => c.riskLevel === 'High').sort((a, b) => b.monthlyRevenueAtRisk - a.monthlyRevenueAtRisk || b.churnProbability - a.churnProbability))
 const underUtilized = computed(() => props.customers.filter((c) => c.underUtilized))
 const monthlyRevenueAtRisk = computed(() => props.customers.reduce((sum, customer) => sum + customer.monthlyRevenueAtRisk, 0))
-const annualRevenueAtRisk = computed(() => monthlyRevenueAtRisk.value * 12)
-const recoverableRevenue = computed(() => props.recommendations.reduce((sum, item) => sum + item.potentialRevenueProtected, 0))
-const untouchedHighRisk = computed(() => highRiskCustomers.value.filter((customer) => !props.actionStatuses[String(customer.id)] || props.actionStatuses[String(customer.id)] === 'Not started'))
+const annualRevenueAtRisk = computed(() => getAnnualRevenueAtRisk(props.customers))
+const recoverableRevenue = computed(() => potentialProtectableArr(props.customers, props.recommendations, props.actions))
+const savedRevenue = computed(() => realisedSavedArr(props.actions))
+const untouchedHighRisk = computed(() => highRiskCustomers.value.filter((customer) => !props.actions.some(action => action.customerId === customer.id && action.status !== 'Completed')))
 const actionCoverage = computed(() => Math.round(((highRiskCustomers.value.length - untouchedHighRisk.value.length) / Math.max(highRiskCustomers.value.length, 1)) * 100))
 const averageHealth = computed(() => Math.round(props.customers.reduce((sum, customer) => sum + customer.healthScore, 0) / Math.max(props.customers.length, 1)))
 const recoveryRate = computed(() => Math.min(100, Math.round((recoverableRevenue.value / Math.max(annualRevenueAtRisk.value, 1)) * 100)))
@@ -66,10 +68,10 @@ const focusRecommendation = computed(() => props.recommendations.find((item) => 
     </section>
 
     <section class="metric-grid" aria-label="Portfolio metrics">
-      <MetricCard label="Total customers" :value="customers.length.toLocaleString()" helper="Active subscription relationships" icon="customers" tone="purple" />
+      <MetricCard label="Total customers" :value="customers.length.toLocaleString()" helper="Active subscription relationships" icon="customers" tone="neutral" />
       <MetricCard label="High-risk customers" :value="highRiskCustomers.length.toString()" :helper="`${untouchedHighRisk.length} still need an owner`" icon="risk" tone="red" />
       <MetricCard label="Under-utilised accounts" :value="underUtilized.length.toString()" helper="Plan or seat mismatch detected" icon="usage" tone="amber" />
-      <MetricCard label="Revenue at risk" :value="formatMoney(monthlyRevenueAtRisk)" helper="Probability-weighted monthly exposure" icon="revenue" tone="blue" />
+      <MetricCard label="Annual Revenue at Risk" :value="formatMoney(annualRevenueAtRisk)" helper="Annual revenue exposure weighted by transparent churn risk" icon="revenue" tone="blue" />
     </section>
 
     <section class="decision-grid">
@@ -109,7 +111,7 @@ const focusRecommendation = computed(() => props.recommendations.find((item) => 
 
       <article v-if="focusAccount && focusRecommendation" class="priority-panel">
         <div class="panel-heading compact">
-          <div><span class="eyebrow light">Next best action</span><h3>Today’s priority</h3></div>
+          <div><span class="eyebrow light">Next best action</span><h3>Today's priority</h3></div>
           <span class="priority-pill">Critical</span>
         </div>
 
@@ -139,7 +141,7 @@ const focusRecommendation = computed(() => props.recommendations.find((item) => 
         <div>
           <span class="eyebrow">Priority accounts</span>
           <h3>High-risk customers</h3>
-          <p>Start with accounts that combine high churn probability and meaningful recurring revenue.</p>
+          <p>Start with accounts that combine high risk indicator and meaningful recurring revenue.</p>
         </div>
         <button type="button" @click="emit('viewCustomers')">View all customers →</button>
       </div>
@@ -154,7 +156,7 @@ const focusRecommendation = computed(() => props.recommendations.find((item) => 
 .overview-page { display: grid; gap: 24px; max-width: 1640px; margin: 0 auto; padding: 32px clamp(24px, 3vw, 48px) 56px; }
 .portfolio-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(400px, .75fr); gap: 36px; align-items: center; min-height: 330px; overflow: hidden; padding: 42px; border: 1px solid #dfe3f1; border-radius: 28px; color: #172033; background: linear-gradient(125deg, #fff 0%, #f1f0ff 60%, #e6faf7 100%); box-shadow: 0 18px 50px rgba(42,54,80,.09); }
 .hero-label { display: inline-flex; align-items: center; gap: 9px; color: #5b5ce2; font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .12em; }
-.hero-label i { width: 10px; height: 10px; border-radius: 50%; background: #39d0c2; box-shadow: 0 0 0 6px rgba(242,207,120,.14); }
+.hero-label i { width: 10px; height: 10px; border-radius: 50%; background: #f8dfcf; box-shadow: 0 0 0 6px rgba(242,207,120,.14); }
 .hero-copy h2 { max-width: 760px; margin: 18px 0 0; font-size: clamp(42px, 4vw, 64px); line-height: 1.03; letter-spacing: -.055em; }
 .hero-copy p { max-width: 650px; margin: 20px 0 0; color: #64708a; font-size: 17px; line-height: 1.65; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
@@ -167,7 +169,7 @@ const focusRecommendation = computed(() => props.recommendations.find((item) => 
 .recovery-summary > span { color: #64708a; font-size: 14px; font-weight: 750; }
 .recovery-summary > strong { display: block; margin-top: 12px; font-size: clamp(40px, 4vw, 58px); line-height: 1; letter-spacing: -.055em; }
 .recovery-track { height: 10px; margin: 28px 0 20px; overflow: hidden; border-radius: 99px; background: #e7eaf2; }
-.recovery-track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #39d0c2, #81ded2); }
+.recovery-track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f8dfcf, #81ded2); }
 .recovery-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .recovery-meta div { padding: 16px; border-radius: 15px; background: #f5f7fb; }
 .recovery-meta b, .recovery-meta span { display: block; }
@@ -176,27 +178,27 @@ const focusRecommendation = computed(() => props.recommendations.find((item) => 
 .decision-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(370px, .55fr); gap: 22px; }
 .panel, .priority-panel { overflow: hidden; border: 1px solid #dfe3f1; border-radius: 26px; background: #ffffff; box-shadow: 0 14px 36px rgba(44,65,57,.06); }
 .panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding: 28px 30px 0; }
-.panel-heading h3 { margin: 8px 0 0; color: #1f2753; font-size: 28px; letter-spacing: -.04em; }
+.panel-heading h3 { margin: 8px 0 0; color: #171717; font-size: 28px; letter-spacing: -.04em; }
 .panel-heading p { margin: 9px 0 0; color: #69769a; font-size: 15px; line-height: 1.55; }
 .eyebrow { color: #5c6b91; font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .12em; }.eyebrow.light { color: #b3c3d8; }
 .live-chip { display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border: 1px solid #d8deed; border-radius: 999px; color: #5c6b91; background: #f1f3fb; font-size: 13px; font-weight: 750; white-space: nowrap; }
-.live-chip i { width: 9px; height: 9px; border-radius: 50%; background: #16b8a6; }
+.live-chip i { width: 9px; height: 9px; border-radius: 50%; background: #28633d; }
 .health-body { display: grid; grid-template-columns: 230px 1fr; gap: 38px; align-items: center; padding: 34px 34px 28px; }
-.health-donut { position: relative; display: grid; place-items: center; width: 192px; height: 192px; margin: auto; border-radius: 50%; background: conic-gradient(#e45768 0 var(--high), #e9a23b var(--high) var(--medium), #16b8a6 var(--medium) 100%); }
+.health-donut { position: relative; display: grid; place-items: center; width: 192px; height: 192px; margin: auto; border-radius: 50%; background: conic-gradient(#e45768 0 var(--high), #e9a23b var(--high) var(--medium), #28633d var(--medium) 100%); }
 .health-donut::before { content: ''; position: absolute; width: 142px; height: 142px; border-radius: 50%; background: #ffffff; }
 .health-donut > div { position: relative; z-index: 1; text-align: center; }
 .health-donut strong, .health-donut span { display: block; }
-.health-donut strong { color: #1f2753; font-size: 48px; letter-spacing: -.06em; }
+.health-donut strong { color: #171717; font-size: 48px; letter-spacing: -.06em; }
 .health-donut span { margin-top: 4px; color: #69769a; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
 .risk-breakdown { display: grid; gap: 23px; }
 .risk-line > div:first-child { display: flex; justify-content: space-between; gap: 14px; color: #59688d; font-size: 15px; font-weight: 750; }
 .risk-line > div:first-child span { display: inline-flex; align-items: center; gap: 10px; }
 .risk-line > div:first-child i { width: 10px; height: 10px; border-radius: 50%; }
-.risk-line.high i { background: #e45768; }.risk-line.medium i { background: #e9a23b; }.risk-line.low i { background: #16b8a6; }
+.risk-line.high i { background: #e45768; }.risk-line.medium i { background: #e9a23b; }.risk-line.low i { background: #28633d; }
 .risk-line strong { color: #27305f; font-size: 15px; }
 .bar-track { height: 10px; margin: 10px 0 8px; overflow: hidden; border-radius: 99px; background: #e6eaf4; }
 .bar-track i { display: block; height: 100%; border-radius: inherit; }
-.risk-line.high .bar-track i { background: #e45768; }.risk-line.medium .bar-track i { background: #e9a23b; }.risk-line.low .bar-track i { background: #16b8a6; }
+.risk-line.high .bar-track i { background: #e45768; }.risk-line.medium .bar-track i { background: #e9a23b; }.risk-line.low .bar-track i { background: #28633d; }
 .risk-line small { color: #7a86a6; font-size: 13px; }
 .plan-exposure { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 0 30px 30px; }
 .plan-exposure > div { padding: 18px; border: 1px solid #dfe4f0; border-radius: 17px; background: #f4f6fb; }
@@ -206,12 +208,12 @@ const focusRecommendation = computed(() => props.recommendations.find((item) => 
 .plan-exposure > div > div { height: 8px; margin: 13px 0 9px; overflow: hidden; border-radius: 99px; background: #e2e6f1; }
 .plan-exposure > div > div i { display: block; height: 100%; border-radius: inherit; background: #0f8f82; }
 .plan-exposure small { color: #7a86a6; font-size: 12px; }
-.priority-panel { padding: 0 28px 28px; color: #fff; background: #1f2753; border-color: #1f2753; }
+.priority-panel { padding: 0 28px 28px; color: #fff; background: #171717; border-color: #171717; }
 .priority-panel .panel-heading { padding-inline: 0; }
 .priority-panel .panel-heading h3 { color: #fff; }
-.priority-pill { padding: 9px 11px; border-radius: 999px; color: #1f2753; background: #39d0c2; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; }
+.priority-pill { padding: 9px 11px; border-radius: 999px; color: #171717; background: #f8dfcf; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; }
 .priority-customer { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; width: 100%; margin-top: 26px; padding: 16px; border: 1px solid rgba(255,255,255,.16); border-radius: 18px; color: #fff; background: rgba(255,255,255,.08); text-align: left; cursor: pointer; }
-.focus-avatar { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 15px; color: #1f2753; background: #dff7f3; font-size: 14px; font-weight: 900; }
+.focus-avatar { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 15px; color: #171717; background: #dff7f3; font-size: 14px; font-weight: 900; }
 .priority-customer strong, .priority-customer small { display: block; }
 .priority-customer strong { font-size: 17px; }.priority-customer small { margin-top: 5px; color: #c3cee1; font-size: 13px; }
 .priority-customer b { padding: 9px 10px; border-radius: 11px; color: #fff; background: #d94456; font-size: 15px; }
@@ -223,9 +225,9 @@ const focusRecommendation = computed(() => props.recommendations.find((item) => 
 .action-value-grid div { padding: 15px; border: 1px solid rgba(255,255,255,.13); border-radius: 15px; background: rgba(255,255,255,.06); }
 .action-value-grid span, .action-value-grid strong { display: block; }
 .action-value-grid span { color: #b3c3d8; font-size: 12px; line-height: 1.4; }.action-value-grid strong { margin-top: 7px; color: #fff; font-size: 16px; }
-.priority-cta { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 54px; margin-top: 22px; padding: 0 17px; border: 0; border-radius: 15px; color: #1f2753; background: #39d0c2; font-size: 15px; font-weight: 850; cursor: pointer; }
+.priority-cta { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 54px; margin-top: 22px; padding: 0 17px; border: 0; border-radius: 15px; color: #171717; background: #f8dfcf; font-size: 15px; font-weight: 850; cursor: pointer; }
 .table-heading { padding-bottom: 24px; }
-.table-heading button { min-height: 46px; padding: 0 15px; border: 1px solid #c8d4e7; border-radius: 13px; color: #5b5bd6; background: #eef1ff; font-size: 14px; font-weight: 800; cursor: pointer; }
+.table-heading button { min-height: 46px; padding: 0 15px; border: 1px solid #c8d4e7; border-radius: 13px; color: #171717; background: #f3f2f0; font-size: 14px; font-weight: 800; cursor: pointer; }
 .overview-note { margin: 2px 0 0; color: #69769a; font-size: 13px; text-align: center; }
 @media (max-width: 1300px) {
   .portfolio-hero { grid-template-columns: 1fr; }

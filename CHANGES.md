@@ -1,11 +1,13 @@
-# RetentionX Preliminary v9 Changes
+# RetentionX Preliminary v1.0 Changes
 
-## Sidebar usability cleanup
+## P0
 
-- Removed the **Curated hackathon demo** chip from the top bar.
-- Removed the **Customer Success / Demo workspace** card from the sidebar.
-- Added an independent scrollable navigation area inside the sidebar.
-- Opening **More tools** now automatically scrolls the expanded menu into view.
-- Preserved collapsible desktop navigation and mobile drawer behaviour.
-- Kept the purple-blue and teal visual system from v8.
-- Rebuilt and type-checked the complete Vue project.
+- Consolidated the editorial design into central tokens and base styles.
+- Replaced the legacy single status map with persistent historical retention actions.
+- Added editable ownership, due dates, response, outcome, risk change, realised revenue, notes and reopening.
+- Added Active Queue and Outcomes sections with clearly labelled synthetic demonstration outcomes.
+- Separated Annual Revenue at Risk, Potential Protectable ARR and Realised Saved ARR.
+- Refactored risk scoring to calculate from exact, source-labelled contributions.
+- Added Model Transparency and visible scenario validation disclosures.
+- Migrated storage to scoped `retentionx-v1-*` keys and removed only known obsolete v8 keys.
+- Added critical business-logic tests with Vitest.

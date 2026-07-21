@@ -15,6 +15,7 @@ const pages: Array<{ id: ViewId; label: string; helper: string; shortcut: string
   { id: 'recommendations', label: 'Retention actions', helper: 'Review intervention work queue', shortcut: 'G A' },
   { id: 'scenarios', label: 'Scenario lab', helper: 'Compare intervention outcomes', shortcut: 'G S' },
   { id: 'data', label: 'Data studio', helper: 'Import and validate CSV data', shortcut: 'G D' },
+  { id: 'model', label: 'Model transparency', helper: 'Inspect exact heuristic scoring rules', shortcut: 'G M' },
 ]
 
 const normalised = computed(() => query.value.trim().toLowerCase())
@@ -59,7 +60,7 @@ function riskLabel(customer: Customer) {
         <section v-if="matchingPages.length">
           <p class="section-label">Navigate</p>
           <button v-for="page in matchingPages" :key="page.id" type="button" :class="{ current: page.id === activeView }" @click="emit('navigate', page.id)">
-            <span class="page-icon">↗</span>
+            <span class="page-icon">→</span>
             <span class="result-copy"><strong>{{ page.label }}</strong><small>{{ page.helper }}</small></span>
             <kbd>{{ page.shortcut }}</kbd>
           </button>
@@ -70,7 +71,7 @@ function riskLabel(customer: Customer) {
         </div>
       </div>
 
-      <footer><span><kbd>↵</kbd> Open</span><span><kbd>↑</kbd><kbd>↓</kbd> Browse</span><span>Press <strong>Ctrl K</strong> anywhere to search</span></footer>
+      <footer><span><kbd>↵</kbd> Open</span><span><kbd>↵</kbd><kbd>↵</kbd> Browse</span><span>Press <strong>Ctrl K</strong> anywhere to search</span></footer>
     </section>
   </div>
 </template>
@@ -85,27 +86,27 @@ function riskLabel(customer: Customer) {
 kbd { display: inline-grid; place-items: center; min-width: 25px; min-height: 23px; padding: 0 6px; border: 1px solid #dfe1e5; border-bottom-color: #c9ccd1; border-radius: 7px; color: #717782; background: #f7f7f8; box-shadow: 0 1px 0 #d7dade; font: 700 9px/1 Inter, sans-serif; }
 .command-results { max-height: min(65vh, 560px); overflow-y: auto; padding: 10px; }
 .command-results section + section { margin-top: 8px; padding-top: 8px; border-top: 1px solid #f0f1f3; }
-.section-label { margin: 0; padding: 8px 10px; color: #959aa3; font-size: 9px; font-weight: 850; text-transform: uppercase; letter-spacing: .12em; }
+.section-label { margin: 0; padding: 8px 10px; color: #959aa3; font-size:12px; font-weight: 850; text-transform: uppercase; letter-spacing: .12em; }
 .command-results button { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; width: 100%; padding: 11px 10px; border: 0; border-radius: 12px; color: inherit; background: transparent; text-align: left; cursor: pointer; }
 .command-results button:hover, .command-results button.current { background: #f5f4fb; }
 .customer-avatar, .page-icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; font-size: 11px; font-weight: 900; }
-.customer-avatar { color: #5b5bd6; background: var(--rx-primary-soft); }
+.customer-avatar { color: #171717; background: var(--rx-primary-soft); }
 .page-icon { color: #47505b; background: #f0f1f3; font-size: 15px; }
 .result-copy { min-width: 0; }
 .result-copy strong, .result-copy small, .risk-copy strong, .risk-copy small { display: block; }
 .result-copy strong { overflow: hidden; color: #25282d; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-.result-copy small { margin-top: 4px; overflow: hidden; color: #9297a0; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.result-copy small { margin-top: 4px; overflow: hidden; color: #9297a0; font-size:12px; text-overflow: ellipsis; white-space: nowrap; }
 .risk-copy { text-align: right; }
-.risk-copy strong { color: #5f6570; font-size: 10px; }
-.risk-copy small { margin-top: 4px; color: #a0a5ad; font-size: 9px; }
+.risk-copy strong { color: #5f6570; font-size:12px; }
+.risk-copy small { margin-top: 4px; color: #a0a5ad; font-size:12px; }
 .risk-copy.high strong { color: var(--rx-danger); }
 .risk-copy.medium strong { color: var(--rx-warning); }
 .risk-copy.low strong { color: var(--rx-success); }
 .empty-state { display: grid; place-items: center; padding: 55px 20px; color: #9297a0; text-align: center; }
 .empty-state > span { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 15px; background: #f1f2f4; font-size: 24px; }
 .empty-state strong { margin-top: 12px; color: #3d4249; font-size: 13px; }
-.empty-state p { margin: 5px 0 0; font-size: 10px; }
-.command-panel > footer { display: flex; align-items: center; gap: 16px; min-height: 42px; padding: 0 16px; border-top: 1px solid var(--rx-border); color: #9a9fa7; background: #fafafa; font-size: 9px; }
+.empty-state p { margin: 5px 0 0; font-size:12px; }
+.command-panel > footer { display: flex; align-items: center; gap: 16px; min-height: 42px; padding: 0 16px; border-top: 1px solid var(--rx-border); color: #9a9fa7; background: #fafafa; font-size:12px; }
 .command-panel > footer span { display: inline-flex; align-items: center; gap: 5px; }
 .command-panel > footer span:last-child { margin-left: auto; }
 .command-panel > footer strong { color: #666c76; }

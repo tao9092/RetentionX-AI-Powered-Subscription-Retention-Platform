@@ -53,7 +53,7 @@ tbody tr { cursor: pointer; transition: background .15s ease, transform .15s eas
 tbody tr:hover, tbody tr:focus-visible { outline: 0; background: #f0f2ff; }
 tbody tr:last-child td { border-bottom: 0; }
 .company-cell { display: flex; align-items: center; gap: 14px; min-width: 250px; }
-.company-avatar { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid #b7c8df; border-radius: 15px; color: #5b5bd6; background: #e9edff; font-size: 13px; font-weight: 900; }
+.company-avatar { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid #b7c8df; border-radius: 15px; color: #171717; background: #e9edff; font-size: 13px; font-weight: 900; }
 .company-cell strong, .company-cell small { display: block; }
 .company-cell strong { color: #27305f; font-size: 16px; }
 .company-cell small { margin-top: 5px; color: #7a86a6; font-size: 13px; }
@@ -64,11 +64,11 @@ tbody tr:last-child td { border-bottom: 0; }
 .health-cell { display: flex; align-items: center; gap: 11px; }
 .health-cell > span { width: 34px; color: #34406e; font-size: 15px; font-weight: 850; }
 .health-cell > div { width: 92px; height: 9px; overflow: hidden; border-radius: 99px; background: #e7eaf4; }
-.health-cell i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #e45768, #d9a94e 52%, #16b8a6); }
+.health-cell i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #e45768, #d9a94e 52%, #28633d); }
 .usage-value { color: #34406e; font-size: 15px; font-weight: 850; }.usage-value.weak { color: #d94456; }
 .money { color: #27305f; font-size: 15px; white-space: nowrap; }
 .row-action { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid #d8deed; border-radius: 13px; color: #34406e; background: #ffffff; font-size: 20px; cursor: pointer; }
-.row-action:hover { color: #fff; border-color: #5b5bd6; background: #5b5bd6; }
+.row-action:hover { color: #fff; border-color: #171717; background: #171717; }
 .empty-table { display: grid; place-items: center; padding: 72px 24px; color: #69769a; text-align: center; }
 .empty-table > span { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 17px; background: #e9edf7; font-size: 26px; }
 .empty-table strong { margin-top: 14px; color: #34406e; font-size: 18px; }.empty-table p { margin: 7px 0 0; font-size: 15px; }

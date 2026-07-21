@@ -4,7 +4,7 @@ const props = defineProps<{
   value: string
   helper: string
   icon: 'customers' | 'risk' | 'usage' | 'revenue'
-  tone: 'purple' | 'red' | 'amber' | 'blue'
+  tone: 'neutral' | 'red' | 'amber' | 'blue'
 }>()
 
 const trendText = props.icon === 'customers'
@@ -42,9 +42,9 @@ const trendText = props.icon === 'customers'
 .metric-icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 .metric-kicker { padding: 8px 11px; border-radius: 999px; font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .06em; background: #eef0ff; }
 .metric-label { position: relative; z-index: 1; display: block; margin-top: 22px; color: #64729a; font-size: 16px; font-weight: 750; }
-.metric-card > strong { position: relative; z-index: 1; display: block; margin-top: 8px; color: #1f2753; font-size: clamp(36px, 3vw, 48px); line-height: 1; letter-spacing: -.05em; }
+.metric-card > strong { position: relative; z-index: 1; display: block; margin-top: 8px; color: #171717; font-size: clamp(36px, 3vw, 48px); line-height: 1; letter-spacing: -.05em; }
 .metric-card > p { position: relative; z-index: 1; margin: 13px 0 0; color: #7a86a6; font-size: 14px; line-height: 1.5; }
-.metric-card.purple { color: #5c6b91; }.metric-card.purple .metric-icon { background: #ecebff; }.metric-card.purple .metric-kicker { color: #0f7e73; }
+.metric-card.neutral { color: #5c6b91; }.metric-card.neutral .metric-icon { background: #f3f2f0; }.metric-card.neutral .metric-kicker { color: #0f7e73; }
 .metric-card.red { color: #e45768; }.metric-card.red .metric-icon { background: #fff0f2; }.metric-card.red .metric-kicker { color: #b93648; background: #fff2f4; }
 .metric-card.amber { color: #d8942c; }.metric-card.amber .metric-icon { background: #e2f9f5; }.metric-card.amber .metric-kicker { color: #93601b; background: #e7faf7; }
 .metric-card.blue { color: #0f8f82; }.metric-card.blue .metric-icon { background: #dcece7; }.metric-card.blue .metric-kicker { color: #0f7e73; background: #ddf8f4; }

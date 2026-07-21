@@ -29,6 +29,7 @@ const primaryItems: Array<{ id: ViewId; label: string; icon: string }> = [
 const moreItems: Array<{ id: ViewId; label: string; description: string; icon: string }> = [
   { id: 'insights', label: 'Strategic insights', description: 'Segments, drivers and renewals', icon: 'insights' },
   { id: 'data', label: 'Data studio', description: 'Import and validate customer data', icon: 'data' },
+  { id: 'model', label: 'Model transparency', description: 'Rules, sources and score breakdown', icon: 'data' },
 ]
 
 function navigate(id: ViewId) {
@@ -46,7 +47,7 @@ async function toggleMore() {
 }
 
 function isMoreActive() {
-  return props.activeView === 'insights' || props.activeView === 'data'
+  return props.activeView === 'insights' || props.activeView === 'data' || props.activeView === 'model'
 }
 </script>
 
@@ -61,14 +62,14 @@ function isMoreActive() {
         </span>
         <span class="brand-copy">
           <strong>RetentionX</strong>
-          <small>Customer intelligence</small>
+          <small>Preliminary v1.0</small>
         </span>
       </button>
 
       <button class="collapse-button desktop-only" type="button" :aria-label="collapsed ? 'Expand sidebar' : 'Collapse sidebar'" @click="emit('toggleCollapse')">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path :d="collapsed ? 'm9 18 6-6-6-6' : 'm15 18-6-6 6-6'"/></svg>
       </button>
-      <button class="close-nav" type="button" aria-label="Close navigation" @click="emit('close')">×</button>
+      <button class="close-nav" type="button" aria-label="Close navigation" @click="emit('close')">脳</button>
     </div>
 
     <div class="sidebar-scroll">
@@ -163,18 +164,18 @@ function isMoreActive() {
 .sidebar.collapsed { width: 88px; min-width: 88px; padding-inline: 14px; }
 .brand-row { display: flex; align-items: center; gap: 10px; min-height: 54px; margin-bottom: 24px; }
 .brand { display: flex; flex: 1; align-items: center; gap: 12px; min-width: 0; padding: 0; border: 0; color: inherit; background: transparent; cursor: pointer; }
-.brand-mark { display: grid; flex: 0 0 48px; place-items: center; width: 48px; height: 48px; border-radius: 16px; color: #ffffff; background: #5b5bd6; box-shadow: 0 10px 24px rgba(98,92,246,.20); }
+.brand-mark { display: grid; flex: 0 0 48px; place-items: center; width: 48px; height: 48px; border-radius: 16px; color: #ffffff; background: #171717; box-shadow: 0 10px 24px rgba(98,92,246,.20); }
 .brand-mark svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
 .brand-copy { min-width: 0; transition: opacity .14s ease; }
 .brand-copy strong, .brand-copy small { display: block; text-align: left; white-space: nowrap; }
 .brand-copy strong { color: #ffffff; font-size: 21px; line-height: 1.05; letter-spacing: -.04em; }
 .brand-copy small { margin-top: 6px; color: #8895ab; font-size: 13px; font-weight: 650; }
 .collapse-button, .close-nav { display: grid; flex: 0 0 auto; place-items: center; width: 38px; height: 38px; padding: 0; border: 1px solid #dedacd; border-radius: 12px; color: #59688d; background: #ffffff; cursor: pointer; }
-.collapse-button:hover, .close-nav:hover { color: #fff; border-color: #5b5bd6; background: #5b5bd6; }
+.collapse-button:hover, .close-nav:hover { color: #fff; border-color: #171717; background: #171717; }
 .collapse-button svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
 .close-nav { display: none; font-size: 26px; }
 .command-button { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; width: 100%; min-height: 54px; margin-bottom: 28px; padding: 0 14px; border: 1px solid #2d394e; border-radius: 15px; color: #aeb8ca; background: #192235; text-align: left; cursor: pointer; }
-.command-button:hover { color: #5b5bd6; border-color: #a2b5cd; background: #eef1ff; }
+.command-button:hover { color: #171717; border-color: #a2b5cd; background: #f3f2f0; }
 .command-button svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.9; }
 .command-button span { overflow: hidden; font-size: 15px; font-weight: 700; white-space: nowrap; }
 kbd { min-width: 47px; padding: 6px 8px; border: 1px solid #d9deed; border-radius: 8px; color: #64729a; background: #ffffff; font: 750 11px/1 ui-sans-serif, sans-serif; text-align: center; }
@@ -182,19 +183,19 @@ nav { display: grid; gap: 8px; min-height: 0; overflow: visible; }
 .nav-section-label { margin: 0 0 8px; padding: 0 12px; color: #69758b; font-size: 11px; font-weight: 850; text-transform: uppercase; letter-spacing: .12em; }
 .nav-item { display: grid; grid-template-columns: auto 1fr auto; gap: 13px; align-items: center; width: 100%; min-height: 52px; padding: 0 12px; border: 1px solid transparent; border-radius: 13px; color: #aeb8ca; background: transparent; text-align: left; cursor: pointer; transition: .16s ease; }
 .nav-item:hover { color: #fff; background: #1d293c; }
-.nav-item.active { color: #fff; border-color: #5b5bd6; background: #5b5bd6; box-shadow: 0 10px 24px rgba(98,92,246,.20); }
+.nav-item.active { color: #fff; border-color: #171717; background: #171717; box-shadow: 0 10px 24px rgba(98,92,246,.20); }
 .nav-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; color: inherit; background: rgba(23,76,63,.06); }
 .nav-item.active .nav-icon { background: rgba(255,255,255,.13); }
 .nav-icon svg, .chevron, .more-icon svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 .nav-copy { overflow: hidden; font-size: 16px; font-weight: 750; white-space: nowrap; }
-.nav-count { display: grid; place-items: center; min-width: 28px; height: 28px; padding: 0 8px; border-radius: 9px; color: #5b5bd6; background: #dff7f3; font-size: 12px; font-weight: 850; }
-.nav-item.active .nav-count { color: #5b5bd6; background: #69ded2; }
+.nav-count { display: grid; place-items: center; min-width: 28px; height: 28px; padding: 0 8px; border-radius: 9px; color: #171717; background: #dff7f3; font-size: 12px; font-weight: 850; }
+.nav-item.active .nav-count { color: #171717; background: #69ded2; }
 .chevron { width: 18px; height: 18px; transition: transform .18s ease; }
 .more-trigger.expanded .chevron { transform: rotate(180deg); }
 .more-wrap { position: relative; }
 .more-menu { display: grid; gap: 7px; margin-top: 8px; padding: 8px; border: 1px solid #dfe3f0; border-radius: 16px; background: #ffffff; box-shadow: 0 18px 45px rgba(35,56,49,.14); }
 .more-menu button { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; width: 100%; padding: 12px; border: 0; border-radius: 12px; color: #59688d; background: transparent; text-align: left; cursor: pointer; }
-.more-menu button:hover, .more-menu button.active { color: #5b5bd6; background: #eef1ff; }
+.more-menu button:hover, .more-menu button.active { color: #171717; background: #f3f2f0; }
 .more-icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; background: #eef1fa; }
 .more-menu strong, .more-menu small { display: block; }
 .more-menu strong { font-size: 14px; }

@@ -1,10 +1,15 @@
-import type { Customer, CustomerInput, RiskLevel, RiskReason } from '@/types/customer'
+import type { Customer, CustomerInput, RiskContribution, RiskLevel, RiskReason } from '@/types/customer'
+
+export const BASE_RISK = 5
+export const MIN_RISK = 6
+export const MAX_RISK = 95
+export const RISK_THRESHOLDS = { medium: 40, high: 70 } as const
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
 export function getRiskLevel(score: number): RiskLevel {
-  if (score >= 70) return 'High'
-  if (score >= 40) return 'Medium'
+  if (score >= RISK_THRESHOLDS.high) return 'High'
+  if (score >= RISK_THRESHOLDS.medium) return 'Medium'
   return 'Low'
 }
 
@@ -13,103 +18,53 @@ export function calculateUsageDecline(current: number, previous: number): number
   return Math.round(((previous - current) / previous) * 100)
 }
 
-function buildRiskReasons(customer: CustomerInput, usageDeclinePct: number, seatUtilizationPct: number): RiskReason[] {
-  const reasons: RiskReason[] = []
+export function getRiskContributions(customer: CustomerInput): RiskContribution[] {
+  const usageDecline = calculateUsageDecline(customer.logins30d, customer.previousLogins30d)
+  const seatUse = Math.round((customer.activeSeats / Math.max(customer.licensedSeats, 1)) * 100)
+  const contributions: RiskContribution[] = [{
+    id: 'base-risk', category: 'Account', label: 'Prototype base risk', points: BASE_RISK,
+    observedValue: 'Applied to every account', explanation: 'A five-point baseline allows the prototype to represent unobserved account risk.', source: 'Account',
+  }]
+  const add = (item: RiskContribution) => { if (item.points > 0) contributions.push(item) }
+  add({ id: 'usage-decline', category: 'Engagement', label: 'Usage activity decline', points: usageDecline >= 60 ? 25 : usageDecline >= 40 ? 18 : usageDecline >= 20 ? 10 : 0, observedValue: `${usageDecline}% decline`, explanation: 'Lower recent login activity indicates reduced engagement.', source: 'Usage' })
+  add({ id: 'feature-adoption', category: 'Adoption', label: 'Feature adoption', points: customer.featureUsagePct <= 20 ? 20 : customer.featureUsagePct <= 35 ? 15 : customer.featureUsagePct < 50 ? 8 : 0, observedValue: `${customer.featureUsagePct}% used`, explanation: 'Low adoption may mean the customer is not realising enough product value.', source: 'Usage' })
+  add({ id: 'seat-utilisation', category: 'Adoption', label: 'Seat utilisation', points: seatUse < 30 ? 7 : seatUse < 50 ? 4 : 0, observedValue: `${customer.activeSeats}/${customer.licensedSeats} seats (${seatUse}%)`, explanation: 'Unused licensed capacity can signal poor plan fit or incomplete onboarding.', source: 'Account' })
+  add({ id: 'support-tickets', category: 'Support', label: 'Unresolved support issues', points: customer.unresolvedTickets >= 3 ? 18 : customer.unresolvedTickets === 2 ? 14 : customer.unresolvedTickets === 1 ? 7 : 0, observedValue: `${customer.unresolvedTickets} unresolved`, explanation: 'Open service issues increase relationship friction.', source: 'Support' })
+  add({ id: 'satisfaction', category: 'Satisfaction', label: 'Customer satisfaction', points: customer.satisfactionScore <= 3 ? 17 : customer.satisfactionScore <= 5 ? 12 : customer.satisfactionScore <= 7 ? 5 : 0, observedValue: `${customer.satisfactionScore}/10`, explanation: 'Weak feedback is treated as a direct dissatisfaction signal.', source: 'Feedback' })
+  add({ id: 'late-payments', category: 'Payment', label: 'Late payment behaviour', points: customer.latePayments90d >= 2 ? 10 : customer.latePayments90d === 1 ? 5 : 0, observedValue: `${customer.latePayments90d} in 90 days`, explanation: 'Payment delays may indicate billing friction or budget pressure.', source: 'Billing' })
+  add({ id: 'renewal-window', category: 'Renewal', label: 'Renewal proximity', points: customer.daysUntilRenewal <= 14 ? 10 : customer.daysUntilRenewal <= 30 ? 7 : customer.daysUntilRenewal <= 60 ? 3 : 0, observedValue: `${customer.daysUntilRenewal} days`, explanation: 'Near-term renewals reduce the available intervention window.', source: 'Account' })
+  return contributions
+}
 
-  if (usageDeclinePct >= 20) {
-    reasons.push({
-      label: 'Usage activity is declining',
-      detail: `Login activity fell by ${usageDeclinePct}% compared with the previous 30 days.`,
-      severity: usageDeclinePct >= 60 ? 25 : usageDeclinePct >= 40 ? 18 : 10,
-      category: 'Engagement',
-    })
-  }
+function contributionReasons(contributions: RiskContribution[]): RiskReason[] {
+  return contributions.filter((item) => item.id !== 'base-risk').map((item) => ({
+    label: item.label,
+    detail: `${item.observedValue}. ${item.explanation}`,
+    severity: item.points,
+    category: item.category === 'Account' ? 'Renewal' : item.category,
+  })).sort((a, b) => b.severity - a.severity)
+}
 
-  if (customer.featureUsagePct < 50) {
-    reasons.push({
-      label: 'Low feature adoption',
-      detail: `Only ${customer.featureUsagePct}% of subscribed features are being used.`,
-      severity: customer.featureUsagePct <= 20 ? 20 : customer.featureUsagePct <= 35 ? 15 : 8,
-      category: 'Adoption',
-    })
-  }
-
-  if (seatUtilizationPct < 60) {
-    reasons.push({
-      label: 'Purchased seats are under-utilised',
-      detail: `${customer.activeSeats} of ${customer.licensedSeats} licensed seats are active (${seatUtilizationPct}%).`,
-      severity: seatUtilizationPct < 30 ? 10 : 6,
-      category: 'Adoption',
-    })
-  }
-
-  if (customer.unresolvedTickets > 0) {
-    reasons.push({
-      label: 'Unresolved support issues',
-      detail: `${customer.unresolvedTickets} support ticket${customer.unresolvedTickets === 1 ? '' : 's'} still require resolution.`,
-      severity: customer.unresolvedTickets >= 3 ? 18 : customer.unresolvedTickets === 2 ? 14 : 7,
-      category: 'Support',
-    })
-  }
-
-  if (customer.satisfactionScore <= 7) {
-    reasons.push({
-      label: 'Customer satisfaction is weak',
-      detail: `The latest satisfaction score is ${customer.satisfactionScore}/10.`,
-      severity: customer.satisfactionScore <= 3 ? 17 : customer.satisfactionScore <= 5 ? 12 : 5,
-      category: 'Satisfaction',
-    })
-  }
-
-  if (customer.latePayments90d > 0) {
-    reasons.push({
-      label: 'Payment behaviour needs attention',
-      detail: `${customer.latePayments90d} late payment${customer.latePayments90d === 1 ? '' : 's'} occurred in the last 90 days.`,
-      severity: customer.latePayments90d >= 2 ? 10 : 5,
-      category: 'Payment',
-    })
-  }
-
-  if (customer.daysUntilRenewal <= 60) {
-    reasons.push({
-      label: 'Renewal date is approaching',
-      detail: `The current subscription renews in ${customer.daysUntilRenewal} days.`,
-      severity: customer.daysUntilRenewal <= 14 ? 10 : customer.daysUntilRenewal <= 30 ? 7 : 3,
-      category: 'Renewal',
-    })
-  }
-
-  return reasons.sort((a, b) => b.severity - a.severity)
+export function calculateRiskScore(contributions: RiskContribution[]): number {
+  return clamp(Math.round(contributions.reduce((sum, contribution) => sum + contribution.points, 0)), MIN_RISK, MAX_RISK)
 }
 
 export function enrichCustomer(customer: CustomerInput): Customer {
   const usageDeclinePct = calculateUsageDecline(customer.logins30d, customer.previousLogins30d)
   const seatUtilizationPct = Math.round((customer.activeSeats / Math.max(customer.licensedSeats, 1)) * 100)
-  const riskReasons = buildRiskReasons(customer, usageDeclinePct, seatUtilizationPct)
-
-  let score = 5
-  score += usageDeclinePct >= 60 ? 25 : usageDeclinePct >= 40 ? 18 : usageDeclinePct >= 20 ? 10 : 0
-  score += customer.featureUsagePct <= 20 ? 20 : customer.featureUsagePct <= 35 ? 15 : customer.featureUsagePct < 50 ? 8 : 0
-  score += seatUtilizationPct < 30 ? 7 : seatUtilizationPct < 50 ? 4 : 0
-  score += customer.unresolvedTickets >= 3 ? 18 : customer.unresolvedTickets === 2 ? 14 : customer.unresolvedTickets === 1 ? 7 : 0
-  score += customer.satisfactionScore <= 3 ? 17 : customer.satisfactionScore <= 5 ? 12 : customer.satisfactionScore <= 7 ? 5 : 0
-  score += customer.latePayments90d >= 2 ? 10 : customer.latePayments90d === 1 ? 5 : 0
-  score += customer.daysUntilRenewal <= 14 ? 10 : customer.daysUntilRenewal <= 30 ? 7 : customer.daysUntilRenewal <= 60 ? 3 : 0
-
-  const churnProbability = clamp(Math.round(score), 6, 95)
-  const healthScore = clamp(100 - churnProbability, 5, 94)
-  const underUtilized = customer.featureUsagePct < 35 || seatUtilizationPct < 50
-
+  const riskContributions = getRiskContributions(customer)
+  const churnProbability = calculateRiskScore(riskContributions)
   return {
     ...customer,
     usageDeclinePct,
     seatUtilizationPct,
     churnProbability,
-    healthScore,
+    healthScore: clamp(100 - churnProbability, 5, 94),
     riskLevel: getRiskLevel(churnProbability),
-    underUtilized,
+    underUtilized: customer.featureUsagePct < 35 || seatUtilizationPct < 50,
     monthlyRevenueAtRisk: Math.round(customer.monthlyRevenue * (churnProbability / 100)),
     annualRevenueAtRisk: Math.round(customer.monthlyRevenue * 12 * (churnProbability / 100)),
-    riskReasons,
+    riskReasons: contributionReasons(riskContributions),
+    riskContributions,
   }
 }

@@ -63,15 +63,15 @@ p { margin: 9px 0 0; overflow: hidden; color: #64729a; font-size: 16px; line-hei
 .topbar-actions { display: flex; align-items: center; gap: 11px; }
 .search-trigger, .review-button, .user-chip { min-height: 50px; border-radius: 14px; cursor: pointer; }
 .search-trigger { display: flex; align-items: center; gap: 10px; padding: 0 13px; border: 1px solid #d9deed; color: #5c6b91; background: #ffffff; }
-.search-trigger:hover { color: #5b5bd6; border-color: #9bb1c8; }
+.search-trigger:hover { color: #171717; border-color: #9bb1c8; }
 .search-trigger svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; }
 .search-trigger > span { font-size: 15px; font-weight: 750; }
 kbd { padding: 6px 8px; border: 1px solid #dce1ef; border-radius: 8px; color: #69769a; background: #f4f6fb; font: 750 11px/1 ui-sans-serif, sans-serif; }
 .review-button { display: flex; align-items: center; gap: 12px; padding: 0 11px 0 17px; border: 0; color: #fff; background: #172033; box-shadow: 0 10px 24px rgba(23,32,51,.14); }
 .review-button:hover { transform: translateY(-1px); background: #2a3650; }
 .review-button span { font-size: 15px; font-weight: 800; }
-.review-button strong { display: grid; place-items: center; min-width: 31px; height: 31px; padding: 0 8px; border-radius: 10px; color: #1f2753; background: #39d0c2; font-size: 13px; }
-.user-chip { display: grid; place-items: center; width: 50px; padding: 0; border: 1px solid #dce1ef; color: #5b5bd6; background: #dff7f3; font-size: 14px; font-weight: 900; }
+.review-button strong { display: grid; place-items: center; min-width: 31px; height: 31px; padding: 0 8px; border-radius: 10px; color: #171717; background: #f8dfcf; font-size: 13px; }
+.user-chip { display: grid; place-items: center; width: 50px; padding: 0; border: 1px solid #dce1ef; color: #171717; background: #dff7f3; font-size: 14px; font-weight: 900; }
 .menu-button { display: none; width: 50px; height: 50px; padding: 12px; border: 1px solid #dce1ef; border-radius: 14px; background: #ffffff; cursor: pointer; }
 .menu-button span { display: block; height: 2px; margin: 5px 0; border-radius: 2px; background: #3b4774; }
 @media (max-width: 980px) {
