@@ -49,16 +49,16 @@ defineEmits<{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 118px;
-  padding: 22px clamp(24px, 3vw, 48px);
-  border-bottom: 1px solid rgba(218, 213, 199, .92);
-  background: rgba(246, 242, 232, .9);
+  min-height: 96px;
+  padding: 18px clamp(24px, 3vw, 48px);
+  border-bottom: 1px solid #e4e8f1;
+  background: rgba(255, 255, 255, .86);
   backdrop-filter: blur(18px);
 }
 .title-area { display: flex; align-items: center; gap: 16px; min-width: 0; }
 .title-copy { min-width: 0; }
 .title-copy > span { display: block; color: #5c6b91; font-size: 13px; font-weight: 850; text-transform: uppercase; letter-spacing: .13em; }
-h1 { margin: 7px 0 0; color: #1f2753; font-size: clamp(34px, 2.5vw, 44px); line-height: 1.02; letter-spacing: -.045em; }
+h1 { margin: 5px 0 0; color: #172033; font-size: clamp(28px, 2.2vw, 36px); line-height: 1.05; letter-spacing: -.04em; }
 p { margin: 9px 0 0; overflow: hidden; color: #64729a; font-size: 16px; line-height: 1.4; text-overflow: ellipsis; white-space: nowrap; }
 .topbar-actions { display: flex; align-items: center; gap: 11px; }
 .search-trigger, .review-button, .user-chip { min-height: 50px; border-radius: 14px; cursor: pointer; }
@@ -67,8 +67,8 @@ p { margin: 9px 0 0; overflow: hidden; color: #64729a; font-size: 16px; line-hei
 .search-trigger svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; }
 .search-trigger > span { font-size: 15px; font-weight: 750; }
 kbd { padding: 6px 8px; border: 1px solid #dce1ef; border-radius: 8px; color: #69769a; background: #f4f6fb; font: 750 11px/1 ui-sans-serif, sans-serif; }
-.review-button { display: flex; align-items: center; gap: 12px; padding: 0 11px 0 17px; border: 0; color: #fff; background: #5b5bd6; box-shadow: 0 10px 24px rgba(23,76,63,.17); }
-.review-button:hover { transform: translateY(-1px); background: #0f7e73; }
+.review-button { display: flex; align-items: center; gap: 12px; padding: 0 11px 0 17px; border: 0; color: #fff; background: #172033; box-shadow: 0 10px 24px rgba(23,32,51,.14); }
+.review-button:hover { transform: translateY(-1px); background: #2a3650; }
 .review-button span { font-size: 15px; font-weight: 800; }
 .review-button strong { display: grid; place-items: center; min-width: 31px; height: 31px; padding: 0 8px; border-radius: 10px; color: #1f2753; background: #39d0c2; font-size: 13px; }
 .user-chip { display: grid; place-items: center; width: 50px; padding: 0; border: 1px solid #dce1ef; color: #5b5bd6; background: #dff7f3; font-size: 14px; font-weight: 900; }

@@ -152,26 +152,26 @@ const focusRecommendation = computed(() => props.recommendations.find((item) => 
 
 <style scoped>
 .overview-page { display: grid; gap: 24px; max-width: 1640px; margin: 0 auto; padding: 32px clamp(24px, 3vw, 48px) 56px; }
-.portfolio-hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(400px, .75fr); gap: 36px; align-items: center; min-height: 340px; padding: 42px; border-radius: 30px; color: #fff; background: linear-gradient(135deg, #302e81 0%, #4f46c8 70%, #16a99a 100%); box-shadow: 0 24px 60px rgba(98,92,246,.20); }
-.hero-label { display: inline-flex; align-items: center; gap: 9px; color: #dff7f3; font-size: 13px; font-weight: 850; text-transform: uppercase; letter-spacing: .12em; }
+.portfolio-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(400px, .75fr); gap: 36px; align-items: center; min-height: 330px; overflow: hidden; padding: 42px; border: 1px solid #dfe3f1; border-radius: 28px; color: #172033; background: linear-gradient(125deg, #fff 0%, #f1f0ff 60%, #e6faf7 100%); box-shadow: 0 18px 50px rgba(42,54,80,.09); }
+.hero-label { display: inline-flex; align-items: center; gap: 9px; color: #5b5ce2; font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .12em; }
 .hero-label i { width: 10px; height: 10px; border-radius: 50%; background: #39d0c2; box-shadow: 0 0 0 6px rgba(242,207,120,.14); }
 .hero-copy h2 { max-width: 760px; margin: 18px 0 0; font-size: clamp(42px, 4vw, 64px); line-height: 1.03; letter-spacing: -.055em; }
-.hero-copy p { max-width: 710px; margin: 20px 0 0; color: #d7deed; font-size: 18px; line-height: 1.65; }
+.hero-copy p { max-width: 650px; margin: 20px 0 0; color: #64708a; font-size: 17px; line-height: 1.65; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
 .primary-button, .secondary-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 54px; padding: 0 19px; border-radius: 15px; font-size: 16px; font-weight: 850; cursor: pointer; }
-.primary-button { border: 0; color: #1f2753; background: #39d0c2; box-shadow: 0 10px 24px rgba(0,0,0,.12); }
-.primary-button:hover { transform: translateY(-2px); background: #69ded2; }
-.secondary-button { border: 1px solid rgba(255,255,255,.25); color: #fff; background: rgba(255,255,255,.08); }
-.secondary-button:hover { background: rgba(255,255,255,.15); }
-.recovery-summary { padding: 30px; border: 1px solid rgba(255,255,255,.23); border-radius: 24px; background: rgba(255,255,255,.1); backdrop-filter: blur(12px); }
-.recovery-summary > span { color: #d7deed; font-size: 15px; font-weight: 750; }
+.primary-button { border: 0; color: #fff; background: #5b5ce2; box-shadow: 0 10px 24px rgba(91,92,226,.22); }
+.primary-button:hover { transform: translateY(-2px); background: #4546bd; }
+.secondary-button { border: 1px solid #ccd3e2; color: #29344b; background: rgba(255,255,255,.72); }
+.secondary-button:hover { background: #fff; }
+.recovery-summary { padding: 30px; border: 1px solid #e0e4ee; border-radius: 22px; background: rgba(255,255,255,.84); box-shadow: 0 16px 40px rgba(42,54,80,.08); backdrop-filter: blur(12px); }
+.recovery-summary > span { color: #64708a; font-size: 14px; font-weight: 750; }
 .recovery-summary > strong { display: block; margin-top: 12px; font-size: clamp(40px, 4vw, 58px); line-height: 1; letter-spacing: -.055em; }
-.recovery-track { height: 12px; margin: 28px 0 20px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.14); }
+.recovery-track { height: 10px; margin: 28px 0 20px; overflow: hidden; border-radius: 99px; background: #e7eaf2; }
 .recovery-track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #39d0c2, #81ded2); }
 .recovery-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.recovery-meta div { padding: 16px; border-radius: 15px; background: rgba(255,255,255,.08); }
+.recovery-meta div { padding: 16px; border-radius: 15px; background: #f5f7fb; }
 .recovery-meta b, .recovery-meta span { display: block; }
-.recovery-meta b { font-size: 21px; }.recovery-meta span { margin-top: 6px; color: #cad5e7; font-size: 13px; line-height: 1.45; }
+.recovery-meta b { font-size: 21px; }.recovery-meta span { margin-top: 6px; color: #77839a; font-size: 13px; line-height: 1.45; }
 .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
 .decision-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(370px, .55fr); gap: 22px; }
 .panel, .priority-panel { overflow: hidden; border: 1px solid #dfe3f1; border-radius: 26px; background: #ffffff; box-shadow: 0 14px 36px rgba(44,65,57,.06); }

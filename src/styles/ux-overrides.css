@@ -209,3 +209,100 @@
 .command-overlay .risk-copy strong { font-size: 12px !important; }.command-overlay .risk-copy small { font-size: 11px !important; }
 .command-overlay .command-panel > footer { min-height: 48px !important; color: #69769a !important; background: #f1f3fb !important; font-size: 11px !important; }
 .command-overlay kbd { min-width: 27px !important; min-height: 25px !important; font-size: 10px !important; }
+
+/* Steep-inspired editorial analytics system */
+:root {
+  --steep-ink: #17191c;
+  --steep-paper: #ffffff;
+  --steep-mist: #f2f2f3;
+  --steep-fog: #fafafb;
+  --steep-muted: #777b86;
+  --steep-ash: #979799;
+  --steep-peach: #fbe1d1;
+  --steep-brown: #5d2a1a;
+  --steep-serif: Georgia, "Times New Roman", ui-serif, serif;
+}
+
+body { color: var(--steep-ink) !important; background: var(--steep-paper) !important; }
+.main-area { background: var(--steep-paper) !important; }
+
+/* Editorial titles */
+.topbar h1,
+.overview-page .hero-copy h2,
+:is(.customers-page,.actions-page,.scenario-page,.insights-page,.data-page) h2,
+.customer-detail-page h2 {
+  color: var(--steep-ink) !important;
+  font-family: var(--steep-serif) !important;
+  font-weight: 400 !important;
+  letter-spacing: -.015em !important;
+}
+.overview-page .hero-copy h2 { font-size: clamp(48px,5vw,72px) !important; line-height: 1.05 !important; }
+.topbar h1 { font-size: clamp(30px,2.5vw,40px) !important; }
+
+/* Quiet white navigation */
+.sidebar { color: var(--steep-ink) !important; background: var(--steep-mist) !important; border-right: 1px solid #dedede !important; }
+.sidebar .brand-copy strong { color: var(--steep-ink) !important; font-family: var(--steep-serif) !important; font-weight: 400 !important; }
+.sidebar .brand-copy small,.sidebar .nav-section-label { color: var(--steep-ash) !important; }
+.sidebar .brand-mark { color: #fff !important; background: var(--steep-ink) !important; border-radius: 9999px !important; box-shadow: none !important; }
+.sidebar .command-button { color: var(--steep-muted) !important; background: var(--steep-paper) !important; border: 1px solid #e3e3e3 !important; border-radius: 16px !important; }
+.sidebar .nav-item { color: var(--steep-muted) !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
+.sidebar .nav-item:hover { color: var(--steep-ink) !important; background: rgba(255,255,255,.62) !important; }
+.sidebar .nav-item.active { color: var(--steep-ink) !important; background: var(--steep-paper) !important; box-shadow: 0 0 0 1px rgba(23,25,28,.05) !important; }
+.sidebar .nav-icon { background: transparent !important; }
+.sidebar .nav-count { color: var(--steep-brown) !important; background: var(--steep-peach) !important; border-radius: 9999px !important; }
+
+/* Transparent editorial header */
+.topbar { min-height: 104px !important; border-bottom: 0 !important; background: rgba(255,255,255,.92) !important; box-shadow: none !important; }
+.topbar .title-copy > span,.topbar p { color: var(--steep-muted) !important; font-weight: 400 !important; }
+.topbar .search-trigger { color: var(--steep-muted) !important; background: var(--steep-mist) !important; border: 0 !important; border-radius: 9999px !important; }
+.topbar .review-button { color: #fff !important; background: var(--steep-ink) !important; border-radius: 9999px !important; box-shadow: none !important; }
+.topbar .review-button strong { color: var(--steep-brown) !important; background: var(--steep-peach) !important; border-radius: 9999px !important; }
+.topbar .user-chip { color: var(--steep-ink) !important; background: var(--steep-mist) !important; border: 0 !important; border-radius: 9999px !important; }
+
+/* Overview as a product-editorial composition */
+.overview-page { max-width: 1280px !important; gap: 32px !important; padding-top: 40px !important; }
+.overview-page .portfolio-hero { min-height: 430px !important; color: var(--steep-ink) !important; background: var(--steep-paper) !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+.overview-page .hero-label { color: var(--steep-ash) !important; font-weight: 400 !important; }
+.overview-page .hero-label i { background: var(--steep-brown) !important; box-shadow: none !important; }
+.overview-page .hero-copy p { color: var(--steep-muted) !important; font-weight: 400 !important; }
+.overview-page .primary-button,.overview-page .priority-cta { color: #fff !important; background: var(--steep-ink) !important; border-radius: 9999px !important; box-shadow: none !important; }
+.overview-page .secondary-button,.overview-page .table-heading button { color: var(--steep-ink) !important; background: transparent !important; border: 1px solid var(--steep-ink) !important; border-radius: 9999px !important; }
+.overview-page .recovery-summary { background: #fff !important; border: 0 !important; border-radius: 20px !important; box-shadow: var(--rx-shadow-md) !important; }
+.overview-page .recovery-track,.overview-page .recovery-meta div { background: var(--steep-mist) !important; }
+.overview-page .recovery-track i { background: var(--steep-brown) !important; }
+.overview-page .metric-card,.overview-page .panel { background: var(--steep-mist) !important; border: 0 !important; border-radius: 24px !important; box-shadow: none !important; }
+.overview-page .metric-card:hover { transform: none !important; box-shadow: none !important; }
+.overview-page .metric-icon,.overview-page .metric-kicker { color: var(--steep-muted) !important; background: transparent !important; }
+.overview-page .metric-kicker { padding: 0 !important; font-weight: 400 !important; }
+.overview-page .priority-panel { color: var(--steep-brown) !important; background: var(--steep-peach) !important; border: 0 !important; border-radius: 24px !important; box-shadow: none !important; }
+.overview-page .priority-panel :is(h3,h4,strong,p,span,small) { color: var(--steep-brown) !important; }
+.overview-page .priority-customer,.overview-page .action-value-grid div { background: rgba(255,255,255,.34) !important; border-color: rgba(93,42,26,.14) !important; }
+.overview-page .priority-pill { color: #fff !important; background: var(--steep-brown) !important; border-radius: 9999px !important; }
+.overview-page .priority-cta { color: #fff !important; background: var(--steep-brown) !important; }
+.overview-page .health-donut { background: conic-gradient(#17191c 0 var(--high), #979799 var(--high) var(--medium), #d7d7d9 var(--medium) 100%) !important; }
+.overview-page .health-donut::before { background: var(--steep-mist) !important; }
+.overview-page .plan-exposure > div { background: #fff !important; border: 0 !important; }
+.overview-page .plan-exposure > div > div,.overview-page .bar-track { background: #dedee0 !important; }
+.overview-page .plan-exposure > div > div i { background: var(--steep-ink) !important; }
+
+/* Secondary screens: flat, soft, and monochrome */
+:is(.customers-page,.actions-page,.scenario-page,.insights-page,.data-page) { max-width: 1280px !important; }
+:is(.customers-page,.actions-page,.scenario-page,.insights-page,.data-page) .panel,
+.customers-page .filter-panel,.customers-page .customer-table-panel,
+.actions-page .action-card,.insights-page .insight-metrics article {
+  background: var(--steep-mist) !important;
+  border: 0 !important;
+  border-radius: 24px !important;
+  box-shadow: none !important;
+}
+:is(.customers-page,.actions-page,.scenario-page,.insights-page,.data-page) :is(button,.export-button) { border-radius: 9999px !important; }
+:is(.customers-page,.actions-page,.scenario-page,.insights-page,.data-page) .eyebrow { color: var(--steep-ash) !important; font-weight: 400 !important; }
+.customers-page .risk-tabs,.customers-page .search-field,.customers-page .filter-controls label { background: #fff !important; border-color: #ececec !important; }
+.customers-page .risk-tabs button.active { color: #fff !important; background: var(--steep-ink) !important; box-shadow: none !important; }
+.customers-page .export-button { color: #fff !important; background: var(--steep-ink) !important; }
+
+/* Search is the only elevated overlay artifact */
+.command-overlay .command-panel { border: 0 !important; border-radius: 20px !important; box-shadow: var(--rx-shadow-md) !important; }
+.command-overlay .command-results button:hover,.command-overlay .command-results button.current { background: var(--steep-mist) !important; }
+.command-overlay .customer-avatar,.command-overlay .page-icon { color: var(--steep-brown) !important; background: var(--steep-peach) !important; border-radius: 9999px !important; }
+.command-overlay .command-panel > footer { background: var(--steep-mist) !important; }

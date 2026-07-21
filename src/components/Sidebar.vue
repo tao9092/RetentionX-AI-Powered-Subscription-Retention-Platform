@@ -140,9 +140,9 @@ function isMoreActive() {
   min-width: 284px;
   height: 100vh;
   padding: 24px 18px 18px;
-  color: #27305f;
-  background: #ffffff;
-  border-right: 1px solid #dedacd;
+  color: #d8deec;
+  background: #111827;
+  border-right: 1px solid #202b3e;
   transition: width .22s ease, min-width .22s ease, transform .22s ease;
 }
 .sidebar-scroll {
@@ -167,21 +167,21 @@ function isMoreActive() {
 .brand-mark svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
 .brand-copy { min-width: 0; transition: opacity .14s ease; }
 .brand-copy strong, .brand-copy small { display: block; text-align: left; white-space: nowrap; }
-.brand-copy strong { color: #29276f; font-size: 21px; line-height: 1.05; letter-spacing: -.04em; }
-.brand-copy small { margin-top: 6px; color: #69769a; font-size: 13px; font-weight: 650; }
+.brand-copy strong { color: #ffffff; font-size: 21px; line-height: 1.05; letter-spacing: -.04em; }
+.brand-copy small { margin-top: 6px; color: #8895ab; font-size: 13px; font-weight: 650; }
 .collapse-button, .close-nav { display: grid; flex: 0 0 auto; place-items: center; width: 38px; height: 38px; padding: 0; border: 1px solid #dedacd; border-radius: 12px; color: #59688d; background: #ffffff; cursor: pointer; }
 .collapse-button:hover, .close-nav:hover { color: #fff; border-color: #5b5bd6; background: #5b5bd6; }
 .collapse-button svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
 .close-nav { display: none; font-size: 26px; }
-.command-button { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; width: 100%; min-height: 54px; margin-bottom: 28px; padding: 0 14px; border: 1px solid #dfe3f0; border-radius: 15px; color: #5c6b91; background: #f1f3fb; text-align: left; cursor: pointer; }
+.command-button { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; width: 100%; min-height: 54px; margin-bottom: 28px; padding: 0 14px; border: 1px solid #2d394e; border-radius: 15px; color: #aeb8ca; background: #192235; text-align: left; cursor: pointer; }
 .command-button:hover { color: #5b5bd6; border-color: #a2b5cd; background: #eef1ff; }
 .command-button svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.9; }
 .command-button span { overflow: hidden; font-size: 15px; font-weight: 700; white-space: nowrap; }
 kbd { min-width: 47px; padding: 6px 8px; border: 1px solid #d9deed; border-radius: 8px; color: #64729a; background: #ffffff; font: 750 11px/1 ui-sans-serif, sans-serif; text-align: center; }
 nav { display: grid; gap: 8px; min-height: 0; overflow: visible; }
-.nav-section-label { margin: 0 0 8px; padding: 0 12px; color: #7a86a6; font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .12em; }
-.nav-item { display: grid; grid-template-columns: auto 1fr auto; gap: 13px; align-items: center; width: 100%; min-height: 56px; padding: 0 12px; border: 1px solid transparent; border-radius: 16px; color: #5c6b91; background: transparent; text-align: left; cursor: pointer; transition: .16s ease; }
-.nav-item:hover { color: #5b5bd6; background: #eef1fa; }
+.nav-section-label { margin: 0 0 8px; padding: 0 12px; color: #69758b; font-size: 11px; font-weight: 850; text-transform: uppercase; letter-spacing: .12em; }
+.nav-item { display: grid; grid-template-columns: auto 1fr auto; gap: 13px; align-items: center; width: 100%; min-height: 52px; padding: 0 12px; border: 1px solid transparent; border-radius: 13px; color: #aeb8ca; background: transparent; text-align: left; cursor: pointer; transition: .16s ease; }
+.nav-item:hover { color: #fff; background: #1d293c; }
 .nav-item.active { color: #fff; border-color: #5b5bd6; background: #5b5bd6; box-shadow: 0 10px 24px rgba(98,92,246,.20); }
 .nav-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; color: inherit; background: rgba(23,76,63,.06); }
 .nav-item.active .nav-icon { background: rgba(255,255,255,.13); }

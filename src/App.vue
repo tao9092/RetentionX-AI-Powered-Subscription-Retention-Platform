@@ -253,22 +253,22 @@ onBeforeUnmount(() => {
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --rx-bg: #f6f7fc;
+  --rx-bg: #ffffff;
   --rx-surface: #ffffff;
-  --rx-surface-soft: #f4f6fb;
+  --rx-surface-soft: #f2f2f3;
   --rx-sidebar: #ffffff;
-  --rx-sidebar-soft: #f1f3fb;
-  --rx-ink: #1f2753;
-  --rx-ink-soft: #3b4774;
-  --rx-muted: #69769a;
-  --rx-faint: #8792af;
-  --rx-border: #dfe3f1;
-  --rx-border-strong: #cfd5e6;
-  --rx-primary: #625cf6;
-  --rx-primary-dark: #4b46c9;
-  --rx-primary-soft: #ecebff;
-  --rx-lime: #39d0c2;
-  --rx-lime-ink: #123f49;
+  --rx-sidebar-soft: #fafafb;
+  --rx-ink: #17191c;
+  --rx-ink-soft: #3f4146;
+  --rx-muted: #777b86;
+  --rx-faint: #979799;
+  --rx-border: #ececec;
+  --rx-border-strong: #dedede;
+  --rx-primary: #17191c;
+  --rx-primary-dark: #000000;
+  --rx-primary-soft: #f2f2f3;
+  --rx-lime: #fbe1d1;
+  --rx-lime-ink: #5d2a1a;
   --rx-danger: #e45768;
   --rx-danger-soft: #fff0f2;
   --rx-warning: #d8942c;
@@ -277,21 +277,21 @@ onBeforeUnmount(() => {
   --rx-success-soft: #ddf8f4;
   --rx-blue: #2d7ff9;
   --rx-blue-soft: #e5f0ff;
-  --rx-radius-sm: 13px;
-  --rx-radius-md: 19px;
-  --rx-radius-lg: 26px;
-  --rx-shadow-sm: 0 12px 34px rgba(48,46,129,.08);
-  --rx-shadow-md: 0 24px 70px rgba(48,46,129,.17);
+  --rx-radius-sm: 16px;
+  --rx-radius-md: 20px;
+  --rx-radius-lg: 24px;
+  --rx-shadow-sm: 0 0 0 1px rgba(4,23,43,.05);
+  --rx-shadow-md: 0 20px 25px -5px rgba(0,0,0,.10), 0 8px 10px -6px rgba(0,0,0,.10);
   background: var(--rx-bg);
 }
 * { box-sizing: border-box; }
 html { min-width: 320px; background: var(--rx-bg); scroll-behavior: smooth; }
-body { min-width: 320px; min-height: 100vh; margin: 0; color: var(--rx-ink); background: var(--rx-bg); font-size: 18px; }
+body { min-width: 320px; min-height: 100vh; margin: 0; color: var(--rx-ink); background: var(--rx-bg); font-size: 16px; }
 button, input, select, textarea { font: inherit; }
 button { -webkit-tap-highlight-color: transparent; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(98,92,246,.26); outline-offset: 2px; }
 .app-shell { display: flex; min-height: 100vh; }
-.main-area { min-width: 0; flex: 1; min-height: 100vh; background: radial-gradient(circle at 100% 0%, rgba(98,92,246,.10), transparent 30%), radial-gradient(circle at 8% 96%, rgba(22,184,166,.08), transparent 26%), var(--rx-bg); }
+.main-area { min-width: 0; flex: 1; min-height: 100vh; background: var(--rx-bg); }
 ::selection { color: #fff; background: var(--rx-primary); }
 ::-webkit-scrollbar { width: 11px; height: 11px; }
 ::-webkit-scrollbar-thumb { border: 3px solid transparent; border-radius: 99px; background: #aab2c8; background-clip: padding-box; }
