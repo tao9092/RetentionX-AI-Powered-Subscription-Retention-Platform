@@ -23,7 +23,7 @@ const completeness = computed(() => Math.round(Object.values(availability.value)
 <template>
   <div class="customer-detail-page">
     <button class="back-button" type="button" @click="emit('back')">
-      <span>→</span> Back to customers
+      <span aria-hidden="true">←</span> Back to customers
     </button>
 
     <section class="customer-hero">
@@ -131,7 +131,7 @@ const completeness = computed(() => Math.round(Object.values(availability.value)
     <section class="panel account-details timeline-panel">
       <div class="panel-heading"><div><span class="eyebrow">Customer activity</span><h3>Chronological timeline</h3><p>Imported source records and retention actions, newest first.</p></div></div>
       <div class="timeline-filters"><button v-for="filter in ['All','Usage','Billing','Support','Feedback','Retention actions']" :key="filter" :class="{active:eventFilter===filter}" @click="eventFilter=filter">{{ filter }}</button></div>
-      <ol v-if="timeline.length" class="timeline"><li v-for="event in timeline" :key="event.id"><time>{{ new Date(event.occurredAt).toLocaleDateString('en-MY') }}</time><div><strong>{{ event.title }}</strong><p>{{ event.detail }}</p><span>{{ event.category }} · {{ event.type }}<template v-if="event.synthetic"> · Synthetic demo event</template></span></div></li></ol>
+      <ol v-if="timeline.length" class="timeline"><li v-for="event in timeline" :key="event.id"><div class="timeline-date"><time :datetime="event.occurredAt">{{ new Date(event.occurredAt).toLocaleDateString('en-MY',{day:'2-digit',month:'short',year:'numeric'}) }}</time><span>{{ new Date(event.occurredAt).toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'}) }}</span></div><div class="timeline-content"><strong>{{ event.title }}</strong><p>{{ event.detail }}</p><span>{{ event.category }} · {{ event.type }}<template v-if="event.synthetic"> · Synthetic demo event</template></span></div></li></ol>
       <p v-else class="empty-timeline">No events match this filter. Imported events are never invented when a source is missing.</p>
     </section>
 
@@ -146,7 +146,7 @@ const completeness = computed(() => Math.round(Object.values(availability.value)
 </template>
 
 <style scoped>
-.timeline-filters{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.timeline-filters button{padding:8px 12px;border:1px solid var(--color-border);border-radius:999px;background:#fff}.timeline-filters button.active{color:#fff;background:#171717}.timeline{display:grid;gap:0;margin:0;padding:0;list-style:none}.timeline li{display:grid;grid-template-columns:130px 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--color-border)}.timeline time,.timeline span{color:var(--color-muted);font-size:12px}.timeline p{margin:5px 0}.empty-timeline{padding:30px;color:var(--color-muted);text-align:center}
+.timeline-panel{padding-bottom:10px}.timeline-filters{display:flex;flex-wrap:wrap;gap:8px;margin:18px 30px}.timeline-filters button{padding:8px 12px;border:1px solid var(--color-border);border-radius:999px;background:#fff}.timeline-filters button.active{color:#fff;background:#171717}.timeline{display:grid;margin:0;padding:0 30px;list-style:none}.timeline li{position:relative;display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px;padding:20px 0;border-top:1px solid var(--color-border)}.timeline li::before{position:absolute;top:25px;left:143px;width:9px;height:9px;border:3px solid #fff;border-radius:50%;background:var(--color-brown);box-shadow:0 0 0 1px var(--color-border);content:''}.timeline-date{display:grid;align-content:start;gap:3px;padding-right:12px;text-align:right}.timeline-date time{color:var(--color-ink);font-size:13px;font-weight:800}.timeline-date span,.timeline-content>span{color:var(--color-muted);font-size:12px}.timeline-content{min-width:0;padding-left:10px}.timeline-content strong{font-size:15px}.timeline p{margin:5px 0;overflow-wrap:anywhere}.empty-timeline{padding:30px;color:var(--color-muted);text-align:center}
 .customer-detail-page { display: grid; gap: 24px; max-width: 1540px; margin: 0 auto; padding: 32px clamp(24px, 3vw, 48px) 56px; }
 .back-button { display: inline-flex; align-items: center; gap: 10px; width: fit-content; min-height: 46px; padding: 0 14px; border: 1px solid #d8deed; border-radius: 13px; color: #34406e; background: #ffffff; font-size: 15px; font-weight: 800; cursor: pointer; }
 .back-button:hover { color: #fff; border-color: #171717; background: #171717; }
@@ -216,5 +216,6 @@ h2 { margin: 8px 0 0; color: #171717; font-size: clamp(38px, 3vw, 50px); line-he
   .health-summary { grid-template-columns: 1fr; text-align: center; }.health-ring { margin: auto; }
   .detail-metrics, .signal-grid { grid-template-columns: 1fr; }
   .panel-heading { padding: 24px 22px 0; }.reason-list { padding-inline: 22px; }.reason-category { display: none; }
+  .timeline-filters{margin-inline:22px}.timeline{padding-inline:22px}.timeline li{grid-template-columns:1fr;gap:8px}.timeline li::before{display:none}.timeline-date{display:flex;gap:8px;padding:0;text-align:left}.timeline-content{padding:0}
 }
 </style>
