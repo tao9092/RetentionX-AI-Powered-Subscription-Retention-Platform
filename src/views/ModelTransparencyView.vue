@@ -31,7 +31,7 @@ const rules = [
       <article><span>Prediction window</span><strong>30-day directional churn risk</strong></article>
       <article><span>Base risk</span><strong>{{ BASE_RISK }} points</strong></article>
       <article><span>Thresholds</span><strong>Medium {{ RISK_THRESHOLDS.medium }} · High {{ RISK_THRESHOLDS.high }}</strong></article>
-      <article><span>Clamping</span><strong>{{ MIN_RISK }}鈥搟{ MAX_RISK }} points</strong></article>
+      <article><span>Clamping</span><strong>{{ MIN_RISK }}–{{ MAX_RISK }} points</strong></article>
     </section>
 
     <section v-if="customer" class="panel breakdown">
@@ -39,7 +39,7 @@ const rules = [
       <div class="contribution-table">
         <div class="row header"><span>Rule</span><span>Observed value</span><span>Source</span><span>Points</span></div>
         <div v-for="item in customer.riskContributions" :key="item.id" class="row"><span><strong>{{ item.label }}</strong><small>{{ item.explanation }}</small></span><span>{{ item.observedValue }}</span><span class="source">{{ item.source }}</span><strong>+{{ item.points }}</strong></div>
-        <div class="row total"><strong>Raw contribution total</strong><span></span><span>Clamped to {{ MIN_RISK }}鈥搟{ MAX_RISK }}</span><strong>{{ rawTotal }} 鈫?{{ customer.churnProbability }}</strong></div>
+        <div class="row total"><strong>Raw contribution total</strong><span></span><span>Clamped to {{ MIN_RISK }}–{{ MAX_RISK }}</span><strong>{{ rawTotal }} → {{ customer.churnProbability }}</strong></div>
       </div>
     </section>
 

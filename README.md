@@ -12,7 +12,11 @@ RetentionX is a browser-only Vue 3 and TypeScript prototype for subscription-ret
 - Annual Revenue at Risk, Potential Protectable ARR and Realised Saved ARR with distinct formulas
 - Model Transparency page describing the preliminary heuristic and every customer contribution
 - Browser persistence under scoped `retentionx-v1-*` keys
-- Combined CSV demo importer (five-source import is planned for P1)
+- Five independent browser-only CSV demo connectors for account, usage, billing, support and feedback data
+- Source validation, customerId merging, completeness and unmatched/duplicate reporting
+- Customer activity timelines with imported lineage and clearly labelled synthetic demo events
+- Directional plan-fit recommendations covering onboarding, maintain, right-size and upsell
+- Recorded-outcome analytics, retention funnel, owner workload and overdue actions
 
 The curated portfolio and three labelled historical outcomes are synthetic hackathon demonstration data. The risk score is not a calibrated production ML probability. Scenario results are directional prototype estimates and are not causally validated.
 
@@ -41,5 +45,7 @@ npm run build
 - `src/utils/actionManager.ts`: action lifecycle and outcome metrics
 - `src/utils/revenueMetrics.ts`: revenue definitions
 - `src/utils/recommendationEngine.ts`, `scenarioEngine.ts`, `csvParser.ts`: deterministic decision support
+- `src/utils/multiSourceData.ts`: five-source parsing, validation, merging and event derivation
+- `src/utils/timeline.ts`, `planFit.ts`: customer activity and directional plan fit
 
 No backend, external integration, or AI API is required for demo mode.

@@ -11,3 +11,12 @@
 - Added Model Transparency and visible scenario validation disclosures.
 - Migrated storage to scoped `retentionx-v1-*` keys and removed only known obsolete v8 keys.
 - Added critical business-logic tests with Vitest.
+
+## P1
+
+- Replaced the combined-file assumption with five independent CSV source imports and downloadable templates.
+- Added source-level validation, duplicates, unmatched records, required/optional source reporting and completeness.
+- Added source-aware risk lineage without invented healthy values for missing datasets.
+- Added imported and synthetic-labelled Customer 360 activity timelines with category filters.
+- Added directional plan-fit recommendations for onboarding, maintain, right-size and upsell.
+- Expanded outcome analytics using recorded actions only, including funnel, responses, risk change and owner workload.

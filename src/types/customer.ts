@@ -1,5 +1,26 @@
 export type Plan = 'Basic' | 'Pro' | 'Enterprise'
 export type RiskLevel = 'Low' | 'Medium' | 'High'
+export type DataSource = 'Usage' | 'Billing' | 'Support' | 'Feedback' | 'Account'
+
+export interface DataAvailability {
+  Usage: boolean
+  Billing: boolean
+  Support: boolean
+  Feedback: boolean
+  Account: boolean
+}
+
+export type CustomerEventCategory = 'Usage' | 'Billing' | 'Support' | 'Feedback' | 'Retention actions'
+export interface CustomerEvent {
+  id: string
+  customerId: number
+  occurredAt: string
+  category: CustomerEventCategory
+  type: string
+  title: string
+  detail: string
+  synthetic?: boolean
+}
 
 export interface CustomerInput {
   id: number
@@ -16,6 +37,8 @@ export interface CustomerInput {
   latePayments90d: number
   satisfactionScore: number
   daysUntilRenewal: number
+  dataAvailability?: DataAvailability
+  events?: CustomerEvent[]
 }
 
 export interface RiskReason {
@@ -32,7 +55,7 @@ export interface RiskContribution {
   points: number
   observedValue: string
   explanation: string
-  source: 'Usage' | 'Billing' | 'Support' | 'Feedback' | 'Account'
+  source: DataSource
 }
 
 export interface Customer extends CustomerInput {

@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import type { Customer, Recommendation } from '@/types/customer'
 import type { RetentionAction, RetentionActionUpdate } from '@/types/action'
+import { recommendPlanFit } from '@/utils/planFit'
+import { customerTimeline } from '@/utils/timeline'
 
 const props = defineProps<{ customer: Customer; recommendation: Recommendation; actions: RetentionAction[]; latestAction?: RetentionAction }>()
 const emit = defineEmits<{
@@ -10,6 +13,11 @@ const emit = defineEmits<{
   updateAction: [actionId: string, update: RetentionActionUpdate]
 }>()
 const formatMoney = (amount: number) => `RM ${Math.round(amount).toLocaleString('en-MY')}`
+const planFit = computed(() => recommendPlanFit(props.customer))
+const eventFilter = ref('All')
+const timeline = computed(() => customerTimeline(props.customer, props.actions).filter(event => eventFilter.value === 'All' || event.category === eventFilter.value))
+const availability = computed(() => props.customer.dataAvailability ?? { Usage:true,Billing:true,Support:true,Feedback:true,Account:true })
+const completeness = computed(() => Math.round(Object.values(availability.value).filter(Boolean).length / 5 * 100))
 </script>
 
 <template>
@@ -73,7 +81,7 @@ const formatMoney = (amount: number) => `RM ${Math.round(amount).toLocaleString(
           <li v-for="(reason, index) in customer.riskReasons.slice(0, 5)" :key="`${reason.category}-${index}`">
             <span class="reason-number">{{ index + 1 }}</span>
             <div><strong>{{ reason.label }}</strong><p>{{ reason.detail }}</p></div>
-            <span class="reason-category">{{ reason.category }}</span>
+            <span class="reason-category">{{ reason.category }} · {{ customer.riskContributions.find(item => item.label === reason.label)?.source }}</span>
           </li>
           <li v-if="customer.riskReasons.length === 0" class="healthy-note">No material churn signals were detected for this account.</li>
         </ol>
@@ -110,6 +118,24 @@ const formatMoney = (amount: number) => `RM ${Math.round(amount).toLocaleString(
     </section>
 
     <section class="panel account-details">
+      <div class="panel-heading"><div><span class="eyebrow">Data lineage</span><h3>{{ completeness }}% customer data completeness</h3><p>Missing sources remain missing and are excluded from risk contributions.</p></div></div>
+      <div class="signal-grid"><div v-for="(available, source) in availability" :key="source"><span>{{ source }} data</span><strong>{{ available ? 'Available' : 'Missing' }}</strong></div></div>
+    </section>
+
+    <section class="panel account-details">
+      <div class="panel-heading"><div><span class="eyebrow">Plan fit</span><h3>{{ planFit.kind }}</h3><p>{{ planFit.reason }}</p></div><span class="count-chip">Directional</span></div>
+      <div class="signal-grid"><div><span>Current plan</span><strong>{{ planFit.currentPlan }}</strong></div><div><span>Recommended plan</span><strong>{{ planFit.recommendedPlan }}</strong></div><div><span>Current monthly revenue</span><strong>{{ formatMoney(customer.monthlyRevenue) }}</strong></div><div><span>Estimated monthly difference</span><strong>{{ formatMoney(planFit.estimatedMonthlyDifference) }}</strong></div><div><span>Licensed / active seats</span><strong>{{ customer.licensedSeats }} / {{ customer.activeSeats }}</strong></div><div><span>Seat / feature utilisation</span><strong>{{ customer.seatUtilizationPct }}% / {{ customer.featureUsagePct }}%</strong></div></div>
+      <p class="method-note">Confidence basis: {{ planFit.confidenceBasis }} Financial impact is directional because no imported plan catalogue is configured.</p>
+    </section>
+
+    <section class="panel account-details timeline-panel">
+      <div class="panel-heading"><div><span class="eyebrow">Customer activity</span><h3>Chronological timeline</h3><p>Imported source records and retention actions, newest first.</p></div></div>
+      <div class="timeline-filters"><button v-for="filter in ['All','Usage','Billing','Support','Feedback','Retention actions']" :key="filter" :class="{active:eventFilter===filter}" @click="eventFilter=filter">{{ filter }}</button></div>
+      <ol v-if="timeline.length" class="timeline"><li v-for="event in timeline" :key="event.id"><time>{{ new Date(event.occurredAt).toLocaleDateString('en-MY') }}</time><div><strong>{{ event.title }}</strong><p>{{ event.detail }}</p><span>{{ event.category }} · {{ event.type }}<template v-if="event.synthetic"> · Synthetic demo event</template></span></div></li></ol>
+      <p v-else class="empty-timeline">No events match this filter. Imported events are never invented when a source is missing.</p>
+    </section>
+
+    <section class="panel account-details">
       <div class="panel-heading"><div><span class="eyebrow">Retention history</span><h3>Past actions and recorded outcomes</h3><p>Workflow completion and customer outcome are reported independently.</p></div></div>
       <div v-if="actions.length" class="signal-grid"><div v-for="action in [...actions].sort((a,b)=>b.createdAt.localeCompare(a.createdAt))" :key="action.id"><span>{{ action.createdAt.slice(0,10) }} · {{ action.owner }}</span><strong>{{ action.title }}</strong><p>{{ action.status }} · {{ action.customerResponse }} · {{ action.outcome }}</p></div></div>
       <p v-else>No retention actions have been recorded for this customer.</p>
@@ -120,6 +146,7 @@ const formatMoney = (amount: number) => `RM ${Math.round(amount).toLocaleString(
 </template>
 
 <style scoped>
+.timeline-filters{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.timeline-filters button{padding:8px 12px;border:1px solid var(--color-border);border-radius:999px;background:#fff}.timeline-filters button.active{color:#fff;background:#171717}.timeline{display:grid;gap:0;margin:0;padding:0;list-style:none}.timeline li{display:grid;grid-template-columns:130px 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--color-border)}.timeline time,.timeline span{color:var(--color-muted);font-size:12px}.timeline p{margin:5px 0}.empty-timeline{padding:30px;color:var(--color-muted);text-align:center}
 .customer-detail-page { display: grid; gap: 24px; max-width: 1540px; margin: 0 auto; padding: 32px clamp(24px, 3vw, 48px) 56px; }
 .back-button { display: inline-flex; align-items: center; gap: 10px; width: fit-content; min-height: 46px; padding: 0 14px; border: 1px solid #d8deed; border-radius: 13px; color: #34406e; background: #ffffff; font-size: 15px; font-weight: 800; cursor: pointer; }
 .back-button:hover { color: #fff; border-color: #171717; background: #171717; }

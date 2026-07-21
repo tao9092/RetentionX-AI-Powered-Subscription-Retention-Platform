@@ -60,8 +60,8 @@ const riskDrivers = computed(() => {
 
 const renewalWindows = computed(() => [
   { label: 'Next 30 days', customers: props.customers.filter((customer) => customer.daysUntilRenewal <= 30), className: 'critical' },
-  { label: '31鈥?0 days', customers: props.customers.filter((customer) => customer.daysUntilRenewal > 30 && customer.daysUntilRenewal <= 60), className: 'attention' },
-  { label: '61鈥?0 days', customers: props.customers.filter((customer) => customer.daysUntilRenewal > 60 && customer.daysUntilRenewal <= 90), className: 'planned' },
+  { label: '31–60 days', customers: props.customers.filter((customer) => customer.daysUntilRenewal > 30 && customer.daysUntilRenewal <= 60), className: 'attention' },
+  { label: '61–90 days', customers: props.customers.filter((customer) => customer.daysUntilRenewal > 60 && customer.daysUntilRenewal <= 90), className: 'planned' },
   { label: 'Beyond 90 days', customers: props.customers.filter((customer) => customer.daysUntilRenewal > 90), className: 'stable' },
 ])
 

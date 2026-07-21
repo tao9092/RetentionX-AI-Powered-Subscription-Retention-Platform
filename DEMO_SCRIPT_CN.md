@@ -25,3 +25,15 @@ RetentionX 帮助订阅业务在客户取消前识别风险、解释风险来源
 ## 4:20–5:00 Model Transparency
 
 在 More tools 打开 Model Transparency，选择客户，核对每个信号的数据来源、贡献分和最终总分，并说明已知限制与未来训练模型架构。
+
+## 5:00–6:10 Multi-source Data Studio
+
+分别展示 Account、Usage、Billing、Support 和 Feedback 五张来源卡。下载模板并导入 CSV，解释每个来源的有效行、无效行、重复记录和更新时间。然后查看 customerId 匹配、未匹配记录、缺失来源和数据完整度，再应用合并后的客户数据。
+
+## 6:10–7:00 Customer timeline 与 Plan fit
+
+返回 Customer 360，展示每个风险信号的数据来源和五类数据完整度。筛选 Usage、Billing、Support、Feedback 与 Retention actions 时间线。最后展示 Maintain、Onboarding、Right-size 或 Upsell 方案，并强调没有套餐目录时价格影响只是方向性估算。
+
+## 7:00–7:30 Outcome analytics
+
+在 Action Center 的 Outcomes 页面展示只基于已记录结果的漏斗、接受与拒绝、风险前后变化、按行动类型节省的 ARR、负责人工作量与逾期数量。数据不足时显示诚实的空状态。

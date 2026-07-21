@@ -28,4 +28,11 @@ const customerInputs: CustomerInput[] = [
   { id: 24, companyName: 'BrightPath Academy', industry: 'Education', plan: 'Basic', monthlyRevenue: 160, licensedSeats: 10, activeSeats: 8, logins30d: 44, previousLogins30d: 47, featureUsagePct: 68, unresolvedTickets: 0, latePayments90d: 0, satisfactionScore: 9, daysUntilRenewal: 99 },
 ]
 
-export const customers = customerInputs.map(enrichCustomer)
+export const customers = customerInputs.map((input) => enrichCustomer({
+  ...input,
+  dataAvailability: { Account: true, Usage: true, Billing: true, Support: true, Feedback: true },
+  events: [
+    { id: `demo-usage-${input.id}`, customerId: input.id, occurredAt: `2026-07-${String(18 - (input.id % 8)).padStart(2,'0')}T09:00:00.000Z`, category: 'Usage', type: input.logins30d < input.previousLogins30d ? 'Usage decrease' : 'Product activity', title: input.logins30d < input.previousLogins30d ? 'Usage activity decreased' : 'Product activity recorded', detail: `${input.logins30d} logins in the latest 30-day period.`, synthetic: true },
+    { id: `demo-feedback-${input.id}`, customerId: input.id, occurredAt: `2026-07-${String(8 - (input.id % 5)).padStart(2,'0')}T09:00:00.000Z`, category: 'Feedback', type: 'Satisfaction change', title: 'Satisfaction score recorded', detail: `Latest satisfaction score: ${input.satisfactionScore}/10.`, synthetic: true },
+  ],
+}))

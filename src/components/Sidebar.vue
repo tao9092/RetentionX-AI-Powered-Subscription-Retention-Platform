@@ -69,7 +69,7 @@ function isMoreActive() {
       <button class="collapse-button desktop-only" type="button" :aria-label="collapsed ? 'Expand sidebar' : 'Collapse sidebar'" @click="emit('toggleCollapse')">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path :d="collapsed ? 'm9 18 6-6-6-6' : 'm15 18-6-6 6-6'"/></svg>
       </button>
-      <button class="close-nav" type="button" aria-label="Close navigation" @click="emit('close')">脳</button>
+      <button class="close-nav" type="button" aria-label="Close navigation" @click="emit('close')">×</button>
     </div>
 
     <div class="sidebar-scroll">
