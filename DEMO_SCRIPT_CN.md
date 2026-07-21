@@ -37,3 +37,15 @@ RetentionX 帮助订阅业务在客户取消前识别风险、解释风险来源
 ## 7:00–7:30 Outcome analytics
 
 在 Action Center 的 Outcomes 页面展示只基于已记录结果的漏斗、接受与拒绝、风险前后变化、按行动类型节省的 ARR、负责人工作量与逾期数量。数据不足时显示诚实的空状态。
+
+## 7:30–8:20 Trained model 与 fallback
+
+在 Model Transparency 切换到 Trained logistic model。若 `public/model/model.json` 可用，展示合成训练数据标签、特征数量与客户推理分数；若文件缺失或无效，界面明确显示 heuristic fallback。不要把合成评估指标描述为生产准确率。
+
+## 8:20–9:10 Experiments 与 audit
+
+创建一个包含假设、目标群体、控制组和处理组的实验。说明即使存在组间差异，系统也不会自动声称因果提升。随后查看 Audit log 中的数据导入、模型切换、行动与实验记录。
+
+## 9:10–10:00 Campaign Simulation
+
+编辑主题、正文和个性化 token，选择客户分群并预览。保存草稿或点击 “Mark as simulated sent”。强调当前没有邮件服务商，因此不会发送真实邮件。

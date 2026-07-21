@@ -17,6 +17,11 @@ RetentionX is a browser-only Vue 3 and TypeScript prototype for subscription-ret
 - Customer activity timelines with imported lineage and clearly labelled synthetic demo events
 - Directional plan-fit recommendations covering onboarding, maintain, right-size and upsell
 - Recorded-outcome analytics, retention funnel, owner workload and overdue actions
+- Optional reproducible scikit-learn logistic-regression training pipeline with browser inference and heuristic fallback
+- Optional Supabase REST adapter and SQL migration with Admin / Customer Success RLS
+- Experiment tracking without unsupported causal claims
+- Clearly labelled campaign simulation with no email delivery
+- Local audit log for important data, model, action, experiment and simulation events
 
 The curated portfolio and three labelled historical outcomes are synthetic hackathon demonstration data. The risk score is not a calibrated production ML probability. Scenario results are directional prototype estimates and are not causally validated.
 
@@ -49,3 +54,18 @@ npm run build
 - `src/utils/timeline.ts`, `planFit.ts`: customer activity and directional plan fit
 
 No backend, external integration, or AI API is required for demo mode.
+
+## Optional trained model
+
+Install the Python dependencies and generate the browser artifact:
+
+```bash
+pip install -r ml/requirements.txt
+python ml/train.py --input ml/sample_churn_history.csv
+```
+
+The included history is synthetic. Exported evaluation metrics are calculated by the script and must not be presented as production performance. If the artifact is absent or invalid, the application visibly falls back to the transparent heuristic.
+
+## Optional Supabase
+
+Copy `.env.example` to `.env.local`, add a project URL and anonymous key, and apply `supabase/migrations/001_initial.sql`. Without those variables the adapter returns `null` and RetentionX continues in local demo mode. Never expose a service-role key in the frontend.

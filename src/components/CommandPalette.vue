@@ -16,6 +16,8 @@ const pages: Array<{ id: ViewId; label: string; helper: string; shortcut: string
   { id: 'scenarios', label: 'Scenario lab', helper: 'Compare intervention outcomes', shortcut: 'G S' },
   { id: 'data', label: 'Data studio', helper: 'Import and validate CSV data', shortcut: 'G D' },
   { id: 'model', label: 'Model transparency', helper: 'Inspect exact heuristic scoring rules', shortcut: 'G M' },
+  { id: 'experiments', label: 'Experiments', helper: 'Track control and treatment groups', shortcut: 'G E' },
+  { id: 'campaigns', label: 'Campaign simulation', helper: 'Compose simulated outreach', shortcut: 'G P' },
 ]
 
 const normalised = computed(() => query.value.trim().toLowerCase())

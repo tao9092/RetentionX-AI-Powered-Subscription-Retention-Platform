@@ -20,3 +20,13 @@
 - Added imported and synthetic-labelled Customer 360 activity timelines with category filters.
 - Added directional plan-fit recommendations for onboarding, maintain, right-size and upsell.
 - Expanded outcome analytics using recorded actions only, including funnel, responses, risk change and owner workload.
+
+## P2
+
+- Added a reproducible logistic-regression training pipeline with held-out metrics and frontend artifacts.
+- Added validated browser inference with explicit heuristic fallback and engine audit events.
+- Added an optional Supabase adapter, schema migration and basic role-based RLS.
+- Added retention experiments with control/treatment tracking and no automatic causal-uplift claim.
+- Added an outreach composer that saves drafts and records simulated sends without delivering email.
+- Added local audit logging for dataset, model, action, response, outcome, revenue, experiment and campaign events.
+- Expanded tests and added GitHub Actions quality verification.

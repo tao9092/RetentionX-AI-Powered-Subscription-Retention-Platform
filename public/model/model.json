@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "modelType": "logistic_regression",
+  "featureOrder": [
+    "monthlyRevenue",
+    "licensedSeats",
+    "activeSeats",
+    "logins30d",
+    "previousLogins30d",
+    "featureUsagePct",
+    "unresolvedTickets",
+    "latePayments90d",
+    "satisfactionScore",
+    "daysUntilRenewal"
+  ],
+  "coefficients": [
+    0.12948721421912626,
+    0.17694113922722618,
+    -0.34843563019261525,
+    -0.6447327676256953,
+    -0.3045462433007602,
+    -1.1032557085943586,
+    0.4732216094509858,
+    0.5165461034821299,
+    -0.8541439702753483,
+    -0.4740264323321786
+  ],
+  "intercept": -0.46454578401231594,
+  "means": {
+    "monthlyRevenue": 940.0,
+    "licensedSeats": 54.13333333333333,
+    "activeSeats": 35.53333333333333,
+    "logins30d": 74.46666666666667,
+    "previousLogins30d": 94.16666666666667,
+    "featureUsagePct": 52.666666666666664,
+    "unresolvedTickets": 1.0,
+    "latePayments90d": 0.5333333333333333,
+    "satisfactionScore": 6.333333333333333,
+    "daysUntilRenewal": 64.06666666666666
+  },
+  "scales": {
+    "monthlyRevenue": 645.7347236546392,
+    "licensedSeats": 37.87587916104684,
+    "activeSeats": 32.986596604614355,
+    "logins30d": 62.07615394729999,
+    "previousLogins30d": 52.640974746125494,
+    "featureUsagePct": 25.02310043850593,
+    "unresolvedTickets": 1.1832159566199232,
+    "latePayments90d": 0.7630348761506399,
+    "satisfactionScore": 2.481039208790453,
+    "daysUntilRenewal": 46.85362549709704
+  },
+  "trainedAt": "2026-07-21T13:02:58.351307+00:00",
+  "datasetLabel": "Synthetic sample churn history",
+  "synthetic": true
+}

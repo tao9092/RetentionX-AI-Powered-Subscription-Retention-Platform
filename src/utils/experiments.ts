@@ -1,0 +1,3 @@
+import type{Experiment}from'@/types/advanced'
+export function experimentMetrics(e:Experiment){const treatmentRate=e.treatmentGroup.length?e.customersRetained/e.treatmentGroup.length:null;const controlRate=e.controlGroup.length?e.controlCustomersRetained/e.controlGroup.length:null;const validComparison=treatmentRate!==null&&controlRate!==null&&e.treatmentGroup.length>0&&e.controlGroup.length>0;return{treatmentRate,controlRate,validComparison,directionalDifference:validComparison?(treatmentRate!-controlRate!):null,canClaimCausality:false}}
+export function parseExperiments(raw:string|null):Experiment[]{if(!raw)return[];try{const x=JSON.parse(raw);return Array.isArray(x)?x:[]}catch{return[]}}

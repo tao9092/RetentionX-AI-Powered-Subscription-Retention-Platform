@@ -30,6 +30,8 @@ const moreItems: Array<{ id: ViewId; label: string; description: string; icon: s
   { id: 'insights', label: 'Strategic insights', description: 'Segments, drivers and renewals', icon: 'insights' },
   { id: 'data', label: 'Data studio', description: 'Import and validate customer data', icon: 'data' },
   { id: 'model', label: 'Model transparency', description: 'Rules, sources and score breakdown', icon: 'data' },
+  { id: 'experiments', label: 'Experiments', description: 'Control and treatment tracking', icon: 'insights' },
+  { id: 'campaigns', label: 'Campaign simulation', description: 'Simulated retention outreach', icon: 'data' },
 ]
 
 function navigate(id: ViewId) {
@@ -47,7 +49,7 @@ async function toggleMore() {
 }
 
 function isMoreActive() {
-  return props.activeView === 'insights' || props.activeView === 'data' || props.activeView === 'model'
+  return ['insights','data','model','experiments','campaigns'].includes(props.activeView)
 }
 </script>
 
