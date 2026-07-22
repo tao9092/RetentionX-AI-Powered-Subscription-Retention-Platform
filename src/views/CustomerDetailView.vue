@@ -131,7 +131,7 @@ const completeness = computed(() => Math.round(Object.values(availability.value)
     <section class="panel account-details timeline-panel">
       <div class="panel-heading"><div><span class="eyebrow">Customer activity</span><h3>Chronological timeline</h3><p>Imported source records and retention actions, newest first.</p></div></div>
       <div class="timeline-filters"><button v-for="filter in ['All','Usage','Billing','Support','Feedback','Retention actions']" :key="filter" :class="{active:eventFilter===filter}" @click="eventFilter=filter">{{ filter }}</button></div>
-      <ol v-if="timeline.length" class="timeline"><li v-for="event in timeline" :key="event.id"><div class="timeline-date"><time :datetime="event.occurredAt">{{ new Date(event.occurredAt).toLocaleDateString('en-MY',{day:'2-digit',month:'short',year:'numeric'}) }}</time><span>{{ new Date(event.occurredAt).toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'}) }}</span></div><div class="timeline-content"><strong>{{ event.title }}</strong><p>{{ event.detail }}</p><span>{{ event.category }} · {{ event.type }}<template v-if="event.synthetic"> · Synthetic demo event</template></span></div></li></ol>
+      <ol v-if="timeline.length" class="timeline"><li v-for="event in timeline" :key="event.id"><div class="timeline-date"><time :datetime="event.occurredAt">{{ new Date(event.occurredAt).toLocaleDateString('en-MY',{day:'2-digit',month:'short',year:'numeric'}) }}</time><span>{{ new Date(event.occurredAt).toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'}) }}</span></div><div class="timeline-content"><strong>{{ event.title }}</strong><p>{{ event.detail }}</p><span>{{ event.category }} · {{ event.type }}<template v-if="event.synthetic"> · Sample event</template></span></div></li></ol>
       <p v-else class="empty-timeline">No events match this filter. Imported events are never invented when a source is missing.</p>
     </section>
 
@@ -141,7 +141,7 @@ const completeness = computed(() => Math.round(Object.values(availability.value)
       <p v-else>No retention actions have been recorded for this customer.</p>
     </section>
 
-    <p class="method-note">Prototype note: the preliminary build uses transparent rule-based signals. A trained, validated churn model can replace this scoring layer without changing the product workflow.</p>
+    <p class="method-note">Method note: risk scores use transparent rule-based signals. A trained, validated churn model can replace this scoring layer without changing the product workflow.</p>
   </div>
 </template>
 

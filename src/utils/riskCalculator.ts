@@ -22,8 +22,8 @@ export function getRiskContributions(customer: CustomerInput): RiskContribution[
   const usageDecline = calculateUsageDecline(customer.logins30d, customer.previousLogins30d)
   const seatUse = Math.round((customer.activeSeats / Math.max(customer.licensedSeats, 1)) * 100)
   const contributions: RiskContribution[] = [{
-    id: 'base-risk', category: 'Account', label: 'Prototype base risk', points: BASE_RISK,
-    observedValue: 'Applied to every account', explanation: 'A five-point baseline allows the prototype to represent unobserved account risk.', source: 'Account',
+    id: 'base-risk', category: 'Account', label: 'Baseline account risk', points: BASE_RISK,
+    observedValue: 'Applied to every account', explanation: 'A five-point baseline represents unobserved account risk.', source: 'Account',
   }]
   const available = customer.dataAvailability ?? { Usage: true, Billing: true, Support: true, Feedback: true, Account: true }
   const add = (item: RiskContribution) => { if (item.points > 0) contributions.push(item) }

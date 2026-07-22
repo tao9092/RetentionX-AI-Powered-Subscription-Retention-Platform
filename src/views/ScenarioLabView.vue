@@ -81,7 +81,7 @@ function chooseScenario(scenario: RetentionScenario) {
       </article>
 
       <article class="result-panel panel">
-        <div class="validation-banner"><strong>Estimation basis: Prototype rule</strong><strong>Validation status: Not causally validated</strong><span>Directional estimate only</span></div>
+        <div class="validation-banner"><strong>Estimation basis: Rule-based model</strong><strong>Validation status: Not causally validated</strong><span>Directional estimate only</span></div>
         <div class="result-heading">
           <div><span class="eyebrow">Selected strategy</span><h3>{{ selectedScenario.name }}</h3><p>{{ selectedScenario.description }}</p></div>
           <span class="strategy-icon">✓</span>
@@ -124,7 +124,7 @@ function chooseScenario(scenario: RetentionScenario) {
       </div>
     </section>
 
-    <p class="disclaimer">These values are transparent scenario estimates for prototype decision support. They are not causal guarantees. A production deployment should validate intervention uplift using historical outcomes or controlled experiments.</p>
+    <p class="disclaimer">These values are transparent directional scenario estimates, not causal guarantees. Intervention uplift should be validated using historical outcomes or controlled experiments.</p>
   </div>
 </template>
 

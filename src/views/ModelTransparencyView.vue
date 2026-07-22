@@ -25,12 +25,12 @@ const trainedScore = computed(() => customer.value && props.artifact ? logisticS
 <template>
   <div class="model-page page-stack">
     <section class="page-intro">
-      <div><span class="eyebrow">Model transparency</span><h2>Every point, explained.</h2><p>Inspect the exact prototype rules and the source behind every customer signal.</p></div>
+      <div><span class="eyebrow">Model transparency</span><h2>Every point, explained.</h2><p>Inspect the exact scoring rules and the source behind every customer signal.</p></div>
       <label class="field"><span>Customer</span><select v-model.number="selectedId"><option v-for="item in customers" :key="item.id" :value="item.id">{{ item.companyName }}</option></select></label>
     </section>
 
-    <section class="prototype-notice"><strong>Transparent heuristic scoring · Preliminary prototype</strong><p>This score is a transparent prototype risk indicator and is not a calibrated probability from a production ML model.</p></section>
-    <section class="panel engine-switch"><div><span class="eyebrow">Risk engine</span><h3>{{ activeEngine === 'logistic' ? 'Trained logistic model' : 'Transparent heuristic prototype' }}</h3><p v-if="requestedEngine==='logistic'&&activeEngine==='heuristic'">Fallback active: the trained artifact is unavailable or invalid.</p><p v-else-if="artifact?.synthetic">The loaded artifact was evaluated on synthetic data and is not production performance.</p></div><div><button :class="{active:requestedEngine==='heuristic'}" @click="emit('changeEngine','heuristic')">Heuristic</button><button :class="{active:requestedEngine==='logistic'}" @click="emit('changeEngine','logistic')">Trained logistic</button></div></section>
+    <section class="prototype-notice"><strong>Transparent heuristic scoring</strong><p>This score is a rule-based risk indicator and is not a calibrated probability from a trained ML model.</p></section>
+    <section class="panel engine-switch"><div><span class="eyebrow">Risk engine</span><h3>{{ activeEngine === 'logistic' ? 'Trained logistic model' : 'Transparent heuristic model' }}</h3><p v-if="requestedEngine==='logistic'&&activeEngine==='heuristic'">Fallback active: the trained artifact is unavailable or invalid.</p><p v-else-if="artifact?.synthetic">The loaded artifact was evaluated on sample data and does not represent live performance.</p></div><div><button :class="{active:requestedEngine==='heuristic'}" @click="emit('changeEngine','heuristic')">Heuristic</button><button :class="{active:requestedEngine==='logistic'}" @click="emit('changeEngine','logistic')">Trained logistic</button></div></section>
     <section v-if="artifact" class="model-facts card-grid"><article><span>Artifact</span><strong>{{artifact.datasetLabel}}</strong></article><article><span>Trained at</span><strong>{{new Date(artifact.trainedAt).toLocaleDateString('en-MY')}}</strong></article><article><span>Features</span><strong>{{artifact.featureOrder.length}}</strong></article><article><span>Selected customer score</span><strong>{{trainedScore}} / 100</strong></article></section>
 
     <section class="model-facts card-grid">
@@ -51,7 +51,7 @@ const trainedScore = computed(() => customer.value && props.artifact ? logisticS
 
     <section class="panel limitations"><div><span class="eyebrow">All scoring rules</span><h3>Deterministic point schedule</h3></div><ul><li v-for="rule in rules" :key="rule">{{ rule }}</li></ul></section>
 
-    <section class="limitations panel"><div><span class="eyebrow">Known limitations</span><h3>What this prototype does not claim</h3></div><ul><li>No training against historical churn labels.</li><li>No calibration, confidence interval, or causal intervention estimate.</li><li>Missing inputs can reduce the evidence available to the rules.</li></ul><div><span class="eyebrow">Future trained-model architecture</span><p>Validated labelled outcomes, time-aware feature engineering, leakage-safe train/test evaluation, calibrated predictions, monitored drift, and human review.</p></div></section>
+    <section class="limitations panel"><div><span class="eyebrow">Known limitations</span><h3>Model scope and boundaries</h3></div><ul><li>No training against historical churn labels.</li><li>No calibration, confidence interval, or causal intervention estimate.</li><li>Missing inputs can reduce the evidence available to the rules.</li></ul><div><span class="eyebrow">Trained-model architecture</span><p>Validated labelled outcomes, time-aware feature engineering, leakage-safe train/test evaluation, calibrated predictions, monitored drift, and human review.</p></div></section>
   </div>
 </template>
 

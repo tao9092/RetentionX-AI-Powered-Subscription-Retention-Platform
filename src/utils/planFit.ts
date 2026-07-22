@@ -12,5 +12,5 @@ export function recommendPlanFit(customer: Customer): PlanFitRecommendation {
   } else if (use > 88 && customer.featureUsagePct > 75 && customer.plan !== 'Enterprise') {
     kind = 'Upsell'; recommendedPlan = customer.plan === 'Basic' ? 'Pro' : 'Enterprise'; reason = 'High seat and feature utilisation indicate credible expansion demand.'
   } else if (customer.featureUsagePct < 50) { kind = 'Onboarding'; reason = 'Feature adoption can improve before a commercial plan change is justified.' }
-  return { currentPlan: customer.plan, recommendedPlan, kind, estimatedMonthlyDifference: prices[recommendedPlan] - customer.monthlyRevenue, reason, confidenceBasis: 'Prototype rule using seat utilisation, feature utilisation and current plan.', directional: true }
+  return { currentPlan: customer.plan, recommendedPlan, kind, estimatedMonthlyDifference: prices[recommendedPlan] - customer.monthlyRevenue, reason, confidenceBasis: 'Rule-based estimate using seat utilisation, feature utilisation and current plan.', directional: true }
 }
