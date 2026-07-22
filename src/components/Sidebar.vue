@@ -64,7 +64,6 @@ function isMoreActive() {
         </span>
         <span class="brand-copy">
           <strong>RetentionX</strong>
-          <small>Preliminary v1.0</small>
         </span>
       </button>
 
